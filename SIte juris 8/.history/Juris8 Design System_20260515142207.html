@@ -1,0 +1,1669 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Juris8 — Design System v1.0</title>
+<meta name="viewport" content="width=1440" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Brand purple — derived from the j8 gradient */
+    --juris-50:  #F4EEFF;
+    --juris-100: #E6D9FF;
+    --juris-200: #CFB4FF;
+    --juris-300: #B388FB;
+    --juris-400: #9A63F0;
+    --juris-500: #7C3AED;  /* primary */
+    --juris-600: #6324C9;
+    --juris-700: #4C1A9E;
+    --juris-800: #361074;
+    --juris-900: #200A4D;
+    --juris-950: #130530;
+
+    /* Ink — cool, mildly violet-tinted neutrals */
+    --ink-50:  #F6F4FB;
+    --ink-100: #ECE9F5;
+    --ink-200: #D5D1E6;
+    --ink-300: #ADA7C7;
+    --ink-400: #807AA0;
+    --ink-500: #5B557A;
+    --ink-600: #3F3A5C;
+    --ink-700: #2A2645;
+    --ink-800: #1A1730;
+    --ink-900: #110E22;
+    --ink-950: #07050F;
+
+    /* Semantic */
+    --ok:    #4ADE80;
+    --ok-2:  #16A34A;
+    --warn:  #F5B454;
+    --warn-2:#B97309;
+    --bad:   #FB7185;
+    --bad-2: #BE123C;
+    --info:  #7DD3FC;
+    --info-2:#0369A1;
+
+    /* Surfaces */
+    --bg:        var(--ink-950);
+    --surface-1: #0D0B1C;
+    --surface-2: #14112A;
+    --surface-3: #1B1738;
+    --hairline:  rgba(255,255,255,0.06);
+    --hairline-strong: rgba(255,255,255,0.11);
+    --text:      #EDEAF7;
+    --muted:     #9C95BD;
+    --dim:       #6E6890;
+
+    /* Gradient — the j8 mark gradient, normalized */
+    --grad-brand: linear-gradient(135deg, #2A0F6E 0%, #6028D9 45%, #B788FF 100%);
+    --grad-brand-soft: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(183,136,255,0.05) 70%);
+    --glow: 0 0 0 1px rgba(124,58,237,0.35), 0 0 40px -8px rgba(124,58,237,0.45);
+
+    /* Radii */
+    --r-2: 4px;
+    --r-3: 8px;
+    --r-4: 12px;
+    --r-5: 16px;
+    --r-6: 20px;
+    --r-7: 28px;
+
+    /* Spacing scale (4px base) */
+    --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+    --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px;
+    --s-9: 48px; --s-10: 64px; --s-11: 96px; --s-12: 128px;
+
+    --font-display: 'Instrument Serif', 'Times New Roman', serif;
+    --font-sans: 'Geist', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+  ::selection { background: var(--juris-500); color: white; }
+
+  /* Background atmosphere */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(900px 600px at 85% -10%, rgba(124,58,237,0.18), transparent 60%),
+      radial-gradient(700px 500px at -10% 30%, rgba(76,26,158,0.12), transparent 65%),
+      radial-gradient(800px 800px at 50% 110%, rgba(183,136,255,0.06), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: -1px -1px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at 50% 30%, black 30%, transparent 80%);
+  }
+
+  /* Layout shell */
+  .shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+  section { padding: 96px 0; border-bottom: 1px solid var(--hairline); }
+  section:last-child { border-bottom: none; }
+
+  /* Type */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  h1, h2, h3, h4 { font-family: var(--font-sans); font-weight: 500; letter-spacing: -0.02em; margin: 0; }
+  h2 { font-size: 48px; line-height: 1.05; }
+  h3 { font-size: 22px; line-height: 1.25; }
+  h4 { font-size: 15px; line-height: 1.35; font-weight: 500; }
+  p { margin: 0; color: var(--ink-200); }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--juris-300);
+  }
+  .eyebrow::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--juris-300);
+    box-shadow: 0 0 12px var(--juris-300);
+  }
+
+  .section-head {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 64px;
+    align-items: end;
+    margin-bottom: 56px;
+  }
+  .section-head .index {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+  .section-head .index .num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 64px;
+    line-height: 1;
+    color: var(--juris-300);
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .section-head h2 .em {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--juris-200);
+  }
+  .section-head .lede { color: var(--ink-300); max-width: 56ch; margin-top: 16px; }
+
+  /* ============ MASTHEAD ============ */
+  .masthead {
+    padding-top: 56px;
+    padding-bottom: 80px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .top-bar .brand-lockup {
+    display: flex; align-items: center; gap: 14px;
+    color: var(--text);
+  }
+  .mark-mini { width: 28px; height: 28px; }
+  .top-bar .links { display: flex; gap: 24px; }
+  .top-bar .links span { color: var(--ink-300); }
+  .top-bar .links .active { color: var(--juris-300); }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 64px;
+    align-items: end;
+    padding-top: 64px;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: 152px;
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    font-weight: 400;
+    margin: 0;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, #FFFFFF 0%, #B388FB 55%, #6028D9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-style: italic;
+  }
+  .hero .right { display: flex; flex-direction: column; gap: 24px; padding-bottom: 16px; }
+  .hero .meta {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 28px 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--hairline);
+  }
+  .hero .meta div { display: flex; flex-direction: column; gap: 6px; }
+  .hero .meta .v { font-family: var(--font-display); font-size: 24px; color: var(--text); font-style: italic; line-height: 1; }
+
+  /* ============ PRINCIPLES ============ */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-5);
+    overflow: hidden;
+  }
+  .principle {
+    background: var(--surface-1);
+    padding: 32px 28px 36px;
+    display: flex; flex-direction: column; gap: 14px;
+    min-height: 220px;
+  }
+  .principle .n { font-family: var(--font-mono); font-size: 11px; color: var(--juris-300); letter-spacing: 0.14em; }
+  .principle h3 { font-family: var(--font-display); font-size: 30px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 400; }
+  .principle h3 em { font-style: italic; color: var(--juris-200); }
+  .principle p { color: var(--ink-300); font-size: 14px; line-height: 1.55; }
+
+  /* ============ BRAND / LOGO ============ */
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+  }
+  .brand-card {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-5);
+    padding: 32px;
+    position: relative;
+  }
+  .brand-card .label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .logo-stage {
+    height: 360px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--r-4);
+    background:
+      radial-gradient(circle at 30% 30%, rgba(183,136,255,0.12), transparent 50%),
+      linear-gradient(180deg, var(--surface-2), var(--surface-1));
+    border: 1px solid var(--hairline);
+    position: relative;
+    overflow: hidden;
+  }
+  .logo-stage img { width: 280px; height: auto; filter: drop-shadow(0 8px 32px rgba(124,58,237,0.35)); }
+  .logo-stage.light {
+    background: linear-gradient(180deg, #F6F4FB, #EAE5F5);
+    border-color: rgba(0,0,0,0.05);
+  }
+  .logo-stage.tiny img { width: 64px; }
+  .logo-stage.small img { width: 160px; }
+
+  .brand-col { display: flex; flex-direction: column; gap: 24px; }
+  .brand-stack { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-5); padding: 24px; }
+  .stack-3 {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  }
+  .swatch-mini { aspect-ratio: 1/1; border-radius: var(--r-4); border: 1px solid var(--hairline); display: flex; align-items: flex-end; padding: 12px; font-family: var(--font-mono); font-size: 10px; }
+
+  .rules-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .rules-list li {
+    display: grid; grid-template-columns: 18px 1fr; gap: 14px;
+    font-size: 13px; color: var(--ink-200);
+  }
+  .rules-list .yes::before { content: '+'; color: var(--ok); font-family: var(--font-mono); font-size: 18px; line-height: 1; }
+  .rules-list .no::before { content: '×'; color: var(--bad); font-family: var(--font-mono); font-size: 18px; line-height: 1; }
+
+  /* ============ COLOR ============ */
+  .color-block-title {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 40px 0 16px;
+  }
+  .color-block-title h3 { font-family: var(--font-display); font-size: 28px; font-weight: 400; letter-spacing: -0.02em; }
+  .color-block-title h3 em { font-style: italic; color: var(--juris-200); }
+  .color-block-title .meta { display: flex; gap: 24px; }
+
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    border-radius: var(--r-5);
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+  }
+  .swatch {
+    aspect-ratio: 1/1.4;
+    padding: 14px 12px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+  .swatch .w { font-size: 11px; font-weight: 500; }
+  .swatch .hex { opacity: 0.7; text-transform: uppercase; }
+  .swatch.light { color: var(--ink-900); }
+  .swatch.dark { color: rgba(255,255,255,0.85); }
+
+  .semantic-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 12px; }
+  .semantic {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-4);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .semantic .row { display: flex; gap: 8px; }
+  .sem-chip { width: 40px; height: 40px; border-radius: var(--r-3); }
+  .sem-name { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+  .sem-val { font-family: var(--font-display); font-size: 22px; font-style: italic; }
+
+  .gradient-row {
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px;
+    margin-top: 32px;
+  }
+  .gradient-card {
+    border-radius: var(--r-5);
+    padding: 24px;
+    min-height: 180px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative;
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+  .gradient-card.primary { background: var(--grad-brand); }
+  .gradient-card.glow {
+    background: radial-gradient(circle at 30% 30%, #B388FB 0%, #6028D9 45%, #200A4D 85%);
+  }
+  .gradient-card.dim {
+    background: linear-gradient(180deg, var(--surface-2), var(--ink-900));
+  }
+  .gradient-card .name { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; }
+  .gradient-card .stops { font-family: var(--font-mono); font-size: 11px; opacity: 0.75; }
+
+  /* ============ TYPOGRAPHY ============ */
+  .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .type-card {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-5);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .type-card.tall { min-height: 360px; }
+  .type-card .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .type-card .spec { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .specimen-display { font-family: var(--font-display); font-size: 132px; line-height: 0.9; letter-spacing: -0.035em; font-style: italic; color: var(--text); }
+  .specimen-display .alt { color: var(--juris-300); font-style: italic; }
+  .specimen-sans { font-family: var(--font-sans); font-size: 84px; line-height: 0.95; letter-spacing: -0.03em; font-weight: 500; }
+  .specimen-mono { font-family: var(--font-mono); font-size: 56px; line-height: 1; letter-spacing: -0.01em; color: var(--juris-200); }
+  .glyphs { display: flex; gap: 8px; margin-top: 24px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+  .glyphs span { padding: 4px 8px; border: 1px solid var(--hairline); border-radius: 4px; }
+
+  .scale-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-5);
+    overflow: hidden;
+  }
+  .scale-table td { padding: 18px 24px; border-top: 1px solid var(--hairline); vertical-align: middle; }
+  .scale-table tr:first-child td { border-top: none; }
+  .scale-table .meta-col { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; width: 28%; }
+  .scale-table .demo-col { color: var(--text); }
+  .scale-table .spec-col { font-family: var(--font-mono); font-size: 11px; color: var(--dim); text-align: right; width: 22%; }
+
+  /* ============ SPACING / GRID ============ */
+  .space-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .space-card {
+    background: var(--surface-1); border: 1px solid var(--hairline);
+    border-radius: var(--r-5); padding: 32px;
+  }
+  .space-row {
+    display: grid; grid-template-columns: 80px 1fr 80px;
+    gap: 16px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--hairline);
+  }
+  .space-row:last-child { border-bottom: none; }
+  .space-row .name { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .space-row .bar { height: 12px; background: var(--juris-500); border-radius: 2px; }
+  .space-row .val { font-family: var(--font-mono); font-size: 11px; color: var(--dim); text-align: right; }
+
+  .radius-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 16px; }
+  .radius-card {
+    background: var(--surface-2); border: 1px solid var(--hairline-strong);
+    aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 14px;
+  }
+  .radius-card .l { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+  .radius-card .v { font-family: var(--font-display); font-style: italic; font-size: 24px; color: var(--text); }
+
+  .grid-demo {
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px;
+    height: 160px;
+    margin-top: 24px;
+  }
+  .grid-demo .col { background: rgba(124,58,237,0.08); border: 1px dashed rgba(124,58,237,0.25); border-radius: 4px; position: relative; }
+  .grid-demo .col::after {
+    content: attr(data-n);
+    position: absolute; bottom: 6px; left: 6px;
+    font-family: var(--font-mono); font-size: 10px; color: var(--juris-300);
+  }
+
+  /* ============ COMPONENTS ============ */
+  .comp-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+  .comp-card {
+    background: var(--surface-1); border: 1px solid var(--hairline);
+    border-radius: var(--r-5); padding: 32px;
+  }
+  .comp-card h4 { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 24px; font-weight: 500; }
+  .comp-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  .comp-row:last-child { margin-bottom: 0; }
+
+  /* Buttons */
+  .btn {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 11px 18px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    letter-spacing: -0.005em;
+    transition: 0.15s ease;
+  }
+  .btn.primary {
+    background: linear-gradient(180deg, #8B5CF6, #6324C9);
+    color: white;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset, 0 8px 24px -10px rgba(124,58,237,0.55);
+  }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.secondary {
+    background: var(--surface-3);
+    color: var(--text);
+    border-color: var(--hairline-strong);
+  }
+  .btn.ghost {
+    background: transparent; color: var(--ink-200);
+    border-color: var(--hairline-strong);
+  }
+  .btn.danger {
+    background: rgba(251,113,133,0.12);
+    color: #FCA5B3;
+    border-color: rgba(251,113,133,0.3);
+  }
+  .btn.sm { font-size: 13px; padding: 7px 12px; }
+  .btn.lg { font-size: 15px; padding: 14px 22px; }
+  .btn .arrow { font-family: var(--font-mono); }
+
+  /* Inputs */
+  .input {
+    background: var(--ink-900);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+  }
+  .input:focus { border-color: var(--juris-400); box-shadow: 0 0 0 4px rgba(124,58,237,0.18); }
+  .input::placeholder { color: var(--dim); }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .field .hint { font-size: 12px; color: var(--dim); }
+
+  /* Badges */
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid;
+    display: inline-flex; gap: 6px; align-items: center;
+  }
+  .badge.brand { background: rgba(124,58,237,0.14); color: var(--juris-300); border-color: rgba(124,58,237,0.3); }
+  .badge.ok { background: rgba(74,222,128,0.12); color: var(--ok); border-color: rgba(74,222,128,0.28); }
+  .badge.warn { background: rgba(245,180,84,0.12); color: var(--warn); border-color: rgba(245,180,84,0.28); }
+  .badge.bad { background: rgba(251,113,133,0.12); color: var(--bad); border-color: rgba(251,113,133,0.28); }
+  .badge.neutral { background: var(--ink-800); color: var(--ink-300); border-color: var(--hairline-strong); }
+  .badge .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  /* Chip */
+  .chip {
+    background: var(--surface-3);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 999px;
+    padding: 6px 12px 6px 8px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px;
+    color: var(--ink-200);
+  }
+  .chip .avatar { width: 18px; height: 18px; border-radius: 50%; background: linear-gradient(135deg, #B388FB, #6028D9); }
+
+  /* Switch */
+  .switch {
+    width: 36px; height: 20px; border-radius: 999px;
+    background: var(--ink-700); position: relative; cursor: pointer;
+    transition: 0.15s;
+  }
+  .switch::after {
+    content: ''; position: absolute; left: 2px; top: 2px;
+    width: 16px; height: 16px; border-radius: 50%; background: white;
+    transition: 0.15s;
+  }
+  .switch.on { background: var(--juris-500); }
+  .switch.on::after { left: 18px; }
+
+  /* Tabs */
+  .tabs {
+    display: inline-flex; padding: 4px;
+    background: var(--ink-900);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
+    gap: 2px;
+  }
+  .tab {
+    padding: 6px 12px; border-radius: 7px;
+    font-size: 13px; color: var(--ink-300); cursor: pointer;
+  }
+  .tab.active { background: var(--surface-3); color: var(--text); }
+
+  /* Progress */
+  .progress {
+    height: 6px; background: var(--ink-800); border-radius: 999px; overflow: hidden;
+    width: 100%;
+  }
+  .progress .fill { height: 100%; background: var(--grad-brand); border-radius: 999px; }
+
+  /* Avatar stack */
+  .avatars { display: flex; }
+  .avatars .a {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid var(--surface-1);
+    margin-left: -8px;
+    background: linear-gradient(135deg, #B388FB, #6028D9);
+  }
+  .avatars .a:first-child { margin-left: 0; }
+  .avatars .a.a2 { background: linear-gradient(135deg, #F5B454, #BE123C); }
+  .avatars .a.a3 { background: linear-gradient(135deg, #7DD3FC, #0369A1); }
+  .avatars .a.a4 { background: var(--surface-3); color: var(--ink-300); font-size: 11px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); }
+
+  /* ============ BENTO ============ */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 120px;
+    gap: 16px;
+  }
+  .b-card {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-5);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .b-card .b-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .b-card .b-title { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+  .b-card .b-num {
+    font-family: var(--font-display); font-style: italic;
+    font-size: 56px; line-height: 1;
+    background: linear-gradient(135deg, #FFFFFF 0%, #B388FB 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .b-card .b-sub { color: var(--ink-300); font-size: 13px; margin-top: 8px; }
+  .b-card .b-body { color: var(--ink-200); font-size: 14px; line-height: 1.5; }
+
+  /* Bento sample 1 */
+  .bento-hero {
+    grid-column: span 8; grid-row: span 3;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(183,136,255,0.22), transparent 50%),
+      var(--surface-1);
+    padding: 40px;
+    justify-content: space-between;
+  }
+  .bento-hero h3 { font-family: var(--font-display); font-size: 48px; line-height: 1; font-weight: 400; letter-spacing: -0.02em; max-width: 12ch; }
+  .bento-hero h3 em { color: var(--juris-200); }
+  .bento-hero .footer { display: flex; justify-content: space-between; align-items: end; }
+  .bento-pill { grid-column: span 4; grid-row: span 1; }
+  .bento-tall { grid-column: span 4; grid-row: span 2; }
+  .bento-mid { grid-column: span 4; grid-row: span 2; }
+  .bento-wide { grid-column: span 8; grid-row: span 2; }
+  .bento-stat { grid-column: span 3; grid-row: span 1; }
+
+  /* Doc viewer mock */
+  .doc-mock { display: flex; flex-direction: column; gap: 6px; }
+  .doc-mock .line { height: 8px; background: var(--ink-700); border-radius: 3px; }
+  .doc-mock .line.s60 { width: 60%; }
+  .doc-mock .line.s80 { width: 80%; }
+  .doc-mock .line.s40 { width: 40%; }
+  .doc-mock .line.highlight { background: linear-gradient(90deg, rgba(124,58,237,0.4), rgba(124,58,237,0.15)); }
+
+  /* Sparkline */
+  .spark { width: 100%; height: 60px; }
+  .spark path.area { fill: rgba(124,58,237,0.18); }
+  .spark path.line { fill: none; stroke: var(--juris-300); stroke-width: 1.5; }
+
+  /* ============ APPLICATION ============ */
+  .app-frame {
+    background: var(--ink-950);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--r-6);
+    overflow: hidden;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.06);
+  }
+  .app-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--surface-1);
+  }
+  .app-topbar .dots { display: flex; gap: 6px; }
+  .app-topbar .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--ink-700); }
+  .app-topbar .url {
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+    padding: 4px 10px; background: var(--ink-900); border-radius: 6px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .app-topbar .url .lock { color: var(--ok); }
+
+  .app-body { display: grid; grid-template-columns: 220px 1fr; min-height: 720px; }
+  .app-sidebar {
+    background: var(--surface-1);
+    border-right: 1px solid var(--hairline);
+    padding: 20px 16px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .sb-brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px; }
+  .sb-brand .mark {
+    width: 28px; height: 28px;
+    background: var(--grad-brand);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-style: italic; font-size: 16px; color: white;
+  }
+  .sb-brand .name { font-weight: 500; letter-spacing: -0.01em; font-size: 15px; }
+  .sb-brand .name .sup { font-size: 9px; color: var(--juris-300); vertical-align: super; margin-left: 2px; font-family: var(--font-mono); }
+  .sb-section { display: flex; flex-direction: column; gap: 2px; }
+  .sb-section .sb-label { font-family: var(--font-mono); font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.14em; padding: 6px 10px; }
+  .sb-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 8px;
+    font-size: 13px; color: var(--ink-300); cursor: pointer;
+  }
+  .sb-item .ic { width: 16px; height: 16px; border-radius: 4px; background: var(--ink-700); }
+  .sb-item.active { background: var(--surface-3); color: var(--text); }
+  .sb-item.active .ic { background: var(--juris-400); }
+  .sb-item .count { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+
+  .app-main { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
+  .app-header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .app-header .crumb { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+  .app-header h2 { font-family: var(--font-display); font-size: 38px; font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; }
+  .app-header h2 em { font-style: italic; color: var(--juris-200); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  .stat {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-4);
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat .l { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+  .stat .v { font-family: var(--font-display); font-style: italic; font-size: 32px; line-height: 1; color: var(--text); }
+  .stat .delta { font-family: var(--font-mono); font-size: 10px; }
+  .stat .delta.up { color: var(--ok); }
+  .stat .delta.down { color: var(--bad); }
+
+  .app-bento {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 16px;
+  }
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-4);
+    padding: 20px;
+  }
+  .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .panel-head h4 { font-size: 14px; font-weight: 500; }
+  .panel-head .more { font-family: var(--font-mono); font-size: 11px; color: var(--juris-300); }
+
+  .case-list { display: flex; flex-direction: column; }
+  .case-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 110px 100px 80px;
+    gap: 14px;
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--hairline);
+    align-items: center;
+    font-size: 13px;
+  }
+  .case-row:last-child { border-bottom: none; }
+  .case-row .ico {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--surface-3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 10px; color: var(--juris-300);
+    border: 1px solid var(--hairline-strong);
+  }
+  .case-row .ttl { color: var(--text); font-weight: 500; }
+  .case-row .sub { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .case-row .date { font-family: var(--font-mono); font-size: 11px; color: var(--ink-300); }
+
+  .ai-card {
+    background:
+      radial-gradient(circle at 100% 0%, rgba(183,136,255,0.18), transparent 50%),
+      var(--surface-1);
+    border: 1px solid rgba(124,58,237,0.2);
+  }
+  .ai-msg {
+    background: var(--ink-900); border: 1px solid var(--hairline);
+    border-radius: 10px; padding: 12px; font-size: 13px; line-height: 1.5;
+    color: var(--ink-100); margin-bottom: 10px;
+  }
+  .ai-msg .hl { background: rgba(124,58,237,0.22); color: var(--juris-200); padding: 0 4px; border-radius: 3px; }
+  .ai-input {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--ink-900); border: 1px solid var(--hairline-strong);
+    border-radius: 10px; padding: 10px 12px;
+    margin-top: 10px;
+  }
+  .ai-input input {
+    background: transparent; border: none; outline: none; color: var(--text);
+    font-family: var(--font-sans); font-size: 13px; flex: 1;
+  }
+  .ai-input .send {
+    background: var(--juris-500); color: white;
+    width: 26px; height: 26px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 13px;
+  }
+
+  /* Footer */
+  .foot {
+    padding: 64px 0 96px;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px;
+  }
+  .foot h3 { font-family: var(--font-display); font-size: 38px; font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; }
+  .foot h3 em { font-style: italic; color: var(--juris-200); }
+  .foot .col { display: flex; flex-direction: column; gap: 10px; }
+  .foot .col .h { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+  .foot .col a { color: var(--ink-200); text-decoration: none; font-size: 13px; }
+
+  /* Misc */
+  .divider { border-top: 1px solid var(--hairline); margin: 24px 0; }
+  .legend-row { display: flex; gap: 24px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .legend-row span::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--juris-400); margin-right: 8px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ============== MASTHEAD ============== -->
+  <header class="masthead">
+    <div class="top-bar">
+      <div class="brand-lockup">
+        <svg class="mark-mini" viewBox="0 0 64 64" fill="none">
+          <defs>
+            <linearGradient id="m1" x1="0" y1="0" x2="64" y2="64">
+              <stop offset="0" stop-color="#2A0F6E"/>
+              <stop offset="0.55" stop-color="#7C3AED"/>
+              <stop offset="1" stop-color="#C58FFF"/>
+            </linearGradient>
+          </defs>
+          <rect width="64" height="64" rx="14" fill="url(#m1)"/>
+          <text x="50%" y="58%" text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="38" fill="white">j8</text>
+        </svg>
+        <span>Juris8 · Design System</span>
+      </div>
+      <div class="links">
+        <span class="active">v1.0</span>
+        <span>15.MAI.2026</span>
+        <span>PT-BR</span>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Sistema de Design · Documento Interno</div>
+        <h1 style="margin-top: 24px;">Inteligência<br/><span class="grad">jurídica,</span><br/>com forma.</h1>
+      </div>
+      <div class="right">
+        <p style="font-size: 17px; line-height: 1.55; color: var(--ink-200); max-width: 42ch;">
+          Os princípios visuais, tokens e componentes que dão consistência ao Juris8. Um sistema construído para confiança — preciso como uma petição, calmo como uma audiência bem conduzida.
+        </p>
+        <div class="meta">
+          <div><div class="mono">Versão</div><div class="v">1.0 — Maio 26</div></div>
+          <div><div class="mono">Autor</div><div class="v">Equipe Juris8</div></div>
+          <div><div class="mono">Stack</div><div class="v">Tokens · React</div></div>
+          <div><div class="mono">Distribuição</div><div class="v">Interna</div></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============== FEATURES (consolidated) ============== -->
+  <section>
+    <div style="background: linear-gradient(180deg, rgba(26,44,66,0.98), var(--surface-2)); padding: 48px; border-radius: var(--r-5);">
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <h2 style="font-family: var(--font-display); font-size: 28px; line-height: 1.05; margin: 0 0 22px;">
+          Da elaboração de documentos jurídicos à transcrição de audiências, <span style="background: rgba(245,180,84,0.14); color: var(--warn-2); padding: 6px 10px; border-radius: 6px;">devolvemos o seu tempo</span> no dia a dia
+        </h2>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 18px;">
+          <div style="background: transparent; padding: 18px; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px; font-size: 16px; color: var(--text);">Pré-elaboração de peças processuais e contratos em segundos</h4>
+            <p style="margin: 0; color: var(--ink-100); font-size: 14px; line-height: 1.5;">Você não precisa começar tudo do zero! Sua Assessora AI pré-elabora os documentos para que você dê apenas os toques finais. Quanto mais você dá tarefas à Assessora AI, mais ela aprende a atender as suas expectativas, adaptando-se ao seu estilo e forma de escrever. Você pode, ainda, carregar algumas de suas peças antigas para que ela aprenda mais rápido como peticionar com o seu jeito e formatação.</p>
+          </div>
+
+          <div style="background: transparent; padding: 18px; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px; font-size: 16px; color: var(--text);">Localize jurisprudência de maneira fácil, rápida e precisa</h4>
+            <p style="margin: 0; color: var(--ink-100); font-size: 14px; line-height: 1.5;">Encontre com facilidade e rapidez a jurisprudência ideal. A sua Assessora AI analisa e identifica precedentes com contexto relevante. Ela também atualiza a jurisprudência das suas peças respeitando os seus critérios. Elimine horas de busca e foque na estratégia.</p>
+          </div>
+
+          <div style="background: transparent; padding: 18px; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px; font-size: 16px; color: var(--text);">Análise de Documentos em Profundidade: Ganhe tempo sem perder nenhum detalhe</h4>
+            <p style="margin: 0; color: var(--ink-100); font-size: 14px; line-height: 1.5;">A sua Assessora AI analisa documentos complexos de forma rápida e precisa, identificando pontos críticos, cruzando dados e extraindo o que é relevante para você. Automatize a revisão de contratos, decisões judiciais, registros imobiliários e muitos outros, mantendo cada detalhe sob o seu controle.</p>
+          </div>
+
+          <div style="background: transparent; padding: 18px; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px; font-size: 16px; color: var(--text);">Transcrição de Reuniões e Audiências com IA: Mais do que apenas Notas, valiosos insights</h4>
+            <p style="margin: 0; color: var(--ink-100); font-size: 14px; line-height: 1.5;">A sua Assessora AI transcreve suas reuniões e mapeia o que foi discutido, tudo isso durante a conversa. Ao final, receba um resumo estruturado para garantir que nada seja esquecido, e a lista de tarefas a serem realizadas. Em audiências, ela localiza trechos cruciais de depoimentos e de esclarecimentos periciais.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== PRINCIPLES ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">01</span>Princípios</div>
+      <div>
+        <h2>Quatro <span class="em">premissas</span> sustentam todo o desenho.</h2>
+        <p class="lede">Antes dos tokens, dos componentes e do grid, há atitude. Esses princípios são o filtro de cada decisão — se uma escolha não passa por eles, não entra no sistema.</p>
+      </div>
+    </div>
+    <div class="principles">
+      <div class="principle">
+        <div class="n">P.01</div>
+        <h3>Precisão <em>antes</em> de adorno.</h3>
+        <p>O jurídico exige exatidão. Cada espaço, peso e cor existem para tornar a informação mais legível — nunca decorativa.</p>
+      </div>
+      <div class="principle">
+        <div class="n">P.02</div>
+        <h3>Calma <em>tecnológica.</em></h3>
+        <p>A IA não grita: explica. Densidade alta, mas com respiro generoso. Animação econômica. Hierarquia tipográfica clara.</p>
+      </div>
+      <div class="principle">
+        <div class="n">P.03</div>
+        <h3>Marca <em>como</em> assinatura.</h3>
+        <p>O roxo do j8 aparece como acento, gradiente e foco — nunca como banho. A interface é violeta-tingida, não violeta-saturada.</p>
+      </div>
+      <div class="principle">
+        <div class="n">P.04</div>
+        <h3>Sistema <em>composto.</em></h3>
+        <p>Tudo é bento: blocos atômicos que recombinam. O mesmo card que exibe um prazo serve para uma jurisprudência ou um KPI.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== BRAND ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">02</span>Marca</div>
+      <div>
+        <h2>O sinal <span class="em">j8</span> — gradiente como gesto.</h2>
+        <p class="lede">A marca opera em três modos: cor cheia sobre fundo claro, monocromático sobre escuro, e um mark reduzido para superfícies de produto. O gradiente é a única licença ornamental do sistema.</p>
+      </div>
+    </div>
+
+    <div class="brand-grid">
+      <div class="brand-card">
+        <div class="label">
+          <span class="mono">2.1 — Lockup principal · Sobre fundo escuro</span>
+          <span class="mono" style="color: var(--juris-300);">Default</span>
+        </div>
+        <div class="logo-stage">
+          <img src="assets/juris8-logo.png" alt="Juris8 logo" style="filter: drop-shadow(0 8px 32px rgba(124,58,237,0.45)) brightness(1.1);"/>
+        </div>
+      </div>
+      <div class="brand-col">
+        <div class="brand-stack">
+          <div class="label" style="margin-bottom: 16px;"><span class="mono">2.2 — Sobre claro</span></div>
+          <div class="logo-stage light small">
+            <img src="assets/juris8-logo.png" alt="Juris8 logo" />
+          </div>
+        </div>
+        <div class="brand-stack">
+          <div class="label" style="margin-bottom: 16px;"><span class="mono">2.3 — Mark reduzido · 64px+</span></div>
+          <div class="logo-stage tiny" style="height: 140px;">
+            <svg viewBox="0 0 120 120" width="80" height="80">
+              <defs>
+                <linearGradient id="markg" x1="0" y1="0" x2="120" y2="120">
+                  <stop offset="0" stop-color="#2A0F6E"/>
+                  <stop offset="0.55" stop-color="#7C3AED"/>
+                  <stop offset="1" stop-color="#C58FFF"/>
+                </linearGradient>
+              </defs>
+              <rect width="120" height="120" rx="28" fill="url(#markg)"/>
+              <text x="50%" y="64%" text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="68" fill="white">j8</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+      <div class="brand-card">
+        <div class="label" style="margin-bottom: 20px;">
+          <span class="mono">2.4 — Espaço de proteção</span>
+          <span class="mono" style="color: var(--juris-300);">x = altura do "8"</span>
+        </div>
+        <div style="height: 200px; background: var(--surface-2); border-radius: var(--r-4); position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--hairline);">
+          <div style="position: absolute; inset: 28px; border: 1px dashed rgba(183,136,255,0.4); border-radius: 8px;"></div>
+          <div style="position: absolute; inset: 56px; border: 1px dashed rgba(183,136,255,0.25); border-radius: 8px;"></div>
+          <svg viewBox="0 0 120 120" width="80" height="80">
+            <use href="#markg" />
+            <rect width="120" height="120" rx="28" fill="url(#markg)"/>
+            <text x="50%" y="64%" text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="68" fill="white">j8</text>
+          </svg>
+          <div style="position: absolute; top: 12px; left: 12px;" class="mono">x</div>
+          <div style="position: absolute; top: 40px; left: 40px;" class="mono">.5x</div>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="label" style="margin-bottom: 20px;">
+          <span class="mono">2.5 — Permitido vs. proibido</span>
+        </div>
+        <ul class="rules-list">
+          <li class="yes">Aplicar o mark sobre superfícies escuras roxo-tingidas (#0D0B1C → #1A1730).</li>
+          <li class="yes">Usar o gradiente <em>brand</em> em estados de foco, CTAs primários e acentos editoriais.</li>
+          <li class="yes">Inverter para monocromático branco quando contraste exigir (vídeo, foto, impressão).</li>
+          <li class="no">Reaplicar o gradiente sobre fotos saturadas ou texturas com ruído próprio.</li>
+          <li class="no">Esticar, inclinar ou recolorir o sinal j8 fora da paleta oficial.</li>
+          <li class="no">Combinar o mark com outro acento de cor — o sistema usa um só.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== COLOR ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">03</span>Cor</div>
+      <div>
+        <h2>Paleta <span class="em">violeta-tingida.</span></h2>
+        <p class="lede">Uma escala roxa de marca, uma escala neutra fria levemente puxada para o violeta, e quatro cores semânticas. O sistema vive no escuro — o claro existe para documentos e relatórios impressos.</p>
+      </div>
+    </div>
+
+    <div class="color-block-title">
+      <h3>3.1 — Juris <em>Purple</em></h3>
+      <div class="meta legend-row">
+        <span>Marca · Acento · Foco</span>
+      </div>
+    </div>
+    <div class="scale">
+      <div class="swatch light" style="background: #F4EEFF;"><span class="w">50</span><span class="hex">F4EEFF</span></div>
+      <div class="swatch light" style="background: #E6D9FF;"><span class="w">100</span><span class="hex">E6D9FF</span></div>
+      <div class="swatch light" style="background: #CFB4FF;"><span class="w">200</span><span class="hex">CFB4FF</span></div>
+      <div class="swatch light" style="background: #B388FB;"><span class="w">300</span><span class="hex">B388FB</span></div>
+      <div class="swatch dark" style="background: #9A63F0;"><span class="w">400</span><span class="hex">9A63F0</span></div>
+      <div class="swatch dark" style="background: #7C3AED;"><span class="w">500 ★</span><span class="hex">7C3AED</span></div>
+      <div class="swatch dark" style="background: #6324C9;"><span class="w">600</span><span class="hex">6324C9</span></div>
+      <div class="swatch dark" style="background: #4C1A9E;"><span class="w">700</span><span class="hex">4C1A9E</span></div>
+      <div class="swatch dark" style="background: #361074;"><span class="w">800</span><span class="hex">361074</span></div>
+      <div class="swatch dark" style="background: #200A4D;"><span class="w">900</span><span class="hex">200A4D</span></div>
+      <div class="swatch dark" style="background: #130530;"><span class="w">950</span><span class="hex">130530</span></div>
+    </div>
+
+    <div class="color-block-title">
+      <h3>3.2 — Ink <em>(neutros frios)</em></h3>
+      <div class="meta legend-row">
+        <span>Superfícies · Texto · Hairlines</span>
+      </div>
+    </div>
+    <div class="scale">
+      <div class="swatch light" style="background: #F6F4FB;"><span class="w">50</span><span class="hex">F6F4FB</span></div>
+      <div class="swatch light" style="background: #ECE9F5;"><span class="w">100</span><span class="hex">ECE9F5</span></div>
+      <div class="swatch light" style="background: #D5D1E6;"><span class="w">200</span><span class="hex">D5D1E6</span></div>
+      <div class="swatch light" style="background: #ADA7C7;"><span class="w">300</span><span class="hex">ADA7C7</span></div>
+      <div class="swatch dark" style="background: #807AA0;"><span class="w">400</span><span class="hex">807AA0</span></div>
+      <div class="swatch dark" style="background: #5B557A;"><span class="w">500</span><span class="hex">5B557A</span></div>
+      <div class="swatch dark" style="background: #3F3A5C;"><span class="w">600</span><span class="hex">3F3A5C</span></div>
+      <div class="swatch dark" style="background: #2A2645;"><span class="w">700</span><span class="hex">2A2645</span></div>
+      <div class="swatch dark" style="background: #1A1730;"><span class="w">800</span><span class="hex">1A1730</span></div>
+      <div class="swatch dark" style="background: #110E22;"><span class="w">900 ★</span><span class="hex">110E22</span></div>
+      <div class="swatch dark" style="background: #07050F;"><span class="w">950</span><span class="hex">07050F</span></div>
+    </div>
+
+    <div class="color-block-title">
+      <h3>3.3 — Semânticas</h3>
+      <div class="meta legend-row"><span>Estados de sistema</span></div>
+    </div>
+    <div class="semantic-row">
+      <div class="semantic">
+        <div class="row"><span class="sem-chip" style="background:#4ADE80"></span><span class="sem-chip" style="background:#16A34A"></span></div>
+        <div><div class="sem-name">Success · Deferido</div><div class="sem-val">#4ADE80</div></div>
+      </div>
+      <div class="semantic">
+        <div class="row"><span class="sem-chip" style="background:#F5B454"></span><span class="sem-chip" style="background:#B97309"></span></div>
+        <div><div class="sem-name">Warn · Prazo curto</div><div class="sem-val">#F5B454</div></div>
+      </div>
+      <div class="semantic">
+        <div class="row"><span class="sem-chip" style="background:#FB7185"></span><span class="sem-chip" style="background:#BE123C"></span></div>
+        <div><div class="sem-name">Danger · Indeferido</div><div class="sem-val">#FB7185</div></div>
+      </div>
+      <div class="semantic">
+        <div class="row"><span class="sem-chip" style="background:#7DD3FC"></span><span class="sem-chip" style="background:#0369A1"></span></div>
+        <div><div class="sem-name">Info · Andamento</div><div class="sem-val">#7DD3FC</div></div>
+      </div>
+    </div>
+
+    <div class="color-block-title" style="margin-top: 48px;">
+      <h3>3.4 — Gradientes</h3>
+      <div class="meta legend-row"><span>Marca · Aurora · Ambient</span></div>
+    </div>
+    <div class="gradient-row">
+      <div class="gradient-card primary" style="color: white;">
+        <div class="name">Grad · Brand</div>
+        <div>
+          <div style="font-family: var(--font-display); font-style: italic; font-size: 36px; line-height: 1;">135° — j8</div>
+          <div class="stops" style="margin-top: 8px;">#2A0F6E → #6028D9 → #B788FF</div>
+        </div>
+      </div>
+      <div class="gradient-card glow" style="color: white;">
+        <div class="name">Grad · Aurora</div>
+        <div class="stops">Radial · halo de foco</div>
+      </div>
+      <div class="gradient-card dim" style="color: var(--text);">
+        <div class="name">Grad · Ambient</div>
+        <div class="stops" style="color: var(--muted);">Linear · superfícies</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== TYPOGRAPHY ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">04</span>Tipografia</div>
+      <div>
+        <h2>Três vozes, <span class="em">um tom.</span></h2>
+        <p class="lede">Serifa editorial para momentos de marca e dado-destaque. Sans geométrica para todo o resto. Mono técnica para metadados, IDs e legendas. Nunca misturamos serif e mono num mesmo bloco — o sans é a ponte.</p>
+      </div>
+    </div>
+
+    <div class="type-grid">
+      <div class="type-card tall">
+        <div class="top">
+          <div>
+            <div class="mono">04.1 · Display</div>
+            <div style="font-family: var(--font-display); font-size: 26px; margin-top: 6px; font-style: italic;">Instrument Serif</div>
+          </div>
+          <span class="badge brand"><span class="dot"></span>Marca</span>
+        </div>
+        <div class="specimen-display">Ag<span class="alt">&amp;</span></div>
+        <p style="margin-top: 24px; color: var(--ink-300);">Use em headlines, números-destaque (KPIs), citações jurisprudenciais e nome do produto. Sempre em itálico para o acento; regular para parágrafo de marca.</p>
+        <div class="glyphs">
+          <span>Aa</span><span>Bb</span><span>Çç</span><span>0–9</span><span>&amp; ¶ §</span><span>italic</span><span>roman</span>
+        </div>
+      </div>
+      <div class="type-card tall">
+        <div class="top">
+          <div>
+            <div class="mono">04.2 · UI</div>
+            <div style="font-family: var(--font-sans); font-size: 26px; margin-top: 6px; font-weight: 500;">Geist</div>
+          </div>
+          <span class="badge neutral"><span class="dot"></span>Sistema</span>
+        </div>
+        <div class="specimen-sans">Ag<span style="color: var(--juris-300);">&amp;</span></div>
+        <p style="margin-top: 24px; color: var(--ink-300);">A voz do produto. 300 (light) para parágrafos longos, 400 para body, 500 para botões e nav, 600 para títulos de seção, 700 reservado.</p>
+        <div class="glyphs">
+          <span>300</span><span>400</span><span>500</span><span>600</span><span>700</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="type-grid" style="margin-top: 24px;">
+      <div class="type-card">
+        <div class="top">
+          <div>
+            <div class="mono">04.3 · Mono</div>
+            <div style="font-family: var(--font-mono); font-size: 24px; margin-top: 6px;">Geist Mono</div>
+          </div>
+          <span class="badge brand"><span class="dot"></span>Técnico</span>
+        </div>
+        <div class="specimen-mono">{ j8.ai }</div>
+        <p style="margin-top: 20px; color: var(--ink-300);">Para IDs de processo, hashes, timestamps, labels de seção e legendas técnicas. Sempre em caixa-alta com tracking +0.1em em rótulos.</p>
+      </div>
+      <div class="type-card">
+        <div class="top">
+          <div>
+            <div class="mono">04.4 — Regras de pareamento</div>
+          </div>
+        </div>
+        <ul class="rules-list" style="margin-top: 8px;">
+          <li class="yes">Serif itálico + sans regular = headline + lede. Pareamento canônico.</li>
+          <li class="yes">Mono caixa-alta como sobre-título de seção, acima de um título sans.</li>
+          <li class="yes">Números em serif itálico para KPIs e datas-destaque.</li>
+          <li class="no">Mono em parágrafos corridos. Use apenas em metadados.</li>
+          <li class="no">Mais de duas vozes no mesmo cartão.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Scale table -->
+    <div class="color-block-title" style="margin-top: 56px;">
+      <h3>4.5 — Escala <em>tipográfica</em></h3>
+      <div class="meta legend-row"><span>Base 15px · Razão 1.25</span></div>
+    </div>
+    <table class="scale-table">
+      <tr>
+        <td class="meta-col">Display · 01</td>
+        <td class="demo-col" style="font-family: var(--font-display); font-size: 96px; line-height: 0.92; letter-spacing: -0.035em; font-style: italic;">Decisão fundamentada.</td>
+        <td class="spec-col">96 / 88 / -.035em</td>
+      </tr>
+      <tr>
+        <td class="meta-col">Display · 02</td>
+        <td class="demo-col" style="font-family: var(--font-display); font-size: 64px; line-height: 1; letter-spacing: -0.03em;">Inteligência <em style="color: var(--juris-200);">jurídica</em></td>
+        <td class="spec-col">64 / 64 / -.03em</td>
+      </tr>
+      <tr>
+        <td class="meta-col">Title · h1</td>
+        <td class="demo-col" style="font-size: 38px; line-height: 1.1; font-weight: 500; letter-spacing: -0.02em;">Painel de processos ativos</td>
+        <td class="spec-col">38 / 42 / 500</td>
+      </tr>
+      <tr>
+        <td class="meta-col">Title · h2</td>
+        <td class="demo-col" style="font-size: 26px; line-height: 1.2; font-weight: 500; letter-spacing: -0.015em;">Resumo automático da peça</td>
+        <td class="spec-col">26 / 32 / 500</td>
+      </tr>
+      <tr>
+        <td class="meta-col">Title · h3</td>
+        <td class="demo-col" style="font-size: 18px; line-height: 1.3; font-weight: 500;">Recomendações da IA</td>
+        <td class="spec-col">18 / 24 / 500</td>
+      </tr>
+      <tr>
+        <td class="meta-col">Body</td>
+        <td class="demo-col" style="font-size: 15px; line-height: 1.55; color: var(--ink-100);">O Juris8 indica três precedentes do STJ que sustentam a tese principal, com grau de aderência acima de 80%.</td>
+        <td class="spec-col">15 / 23 / 400</td>
+      </tr>
+      <tr>
+        <td class="meta-col">Caption</td>
+        <td class="demo-col" style="font-size: 13px; color: var(--ink-300);">Última atualização há 4 minutos · análise automática</td>
+        <td class="spec-col">13 / 18 / 400</td>
+      </tr>
+      <tr>
+        <td class="meta-col">Mono · Label</td>
+        <td class="demo-col mono" style="font-size: 11px;">Processo nº 0001234-56.2025.8.26.0100</td>
+        <td class="spec-col">11 / 14 / +.10em</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- ============== SPACING / RADIUS / GRID ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">05</span>Espaço e forma</div>
+      <div>
+        <h2>Quatro pixels, <span class="em">um ritmo.</span></h2>
+        <p class="lede">Todo espaço é múltiplo de 4. O grid de produto é 12 colunas, gutter 16, padding lateral 32. Raios pequenos para densidade, raios grandes para ambient.</p>
+      </div>
+    </div>
+
+    <div class="space-grid">
+      <div class="space-card">
+        <h4 class="mono" style="color: var(--muted); margin-bottom: 16px;">5.1 — Escala de espaçamento</h4>
+        <div class="space-row"><span class="name">space-1</span><div class="bar" style="width: 4px;"></div><span class="val">4 px</span></div>
+        <div class="space-row"><span class="name">space-2</span><div class="bar" style="width: 8px;"></div><span class="val">8 px</span></div>
+        <div class="space-row"><span class="name">space-3</span><div class="bar" style="width: 12px;"></div><span class="val">12 px</span></div>
+        <div class="space-row"><span class="name">space-4</span><div class="bar" style="width: 16px;"></div><span class="val">16 px</span></div>
+        <div class="space-row"><span class="name">space-5</span><div class="bar" style="width: 20px;"></div><span class="val">20 px</span></div>
+        <div class="space-row"><span class="name">space-6</span><div class="bar" style="width: 24px;"></div><span class="val">24 px</span></div>
+        <div class="space-row"><span class="name">space-7</span><div class="bar" style="width: 32px;"></div><span class="val">32 px</span></div>
+        <div class="space-row"><span class="name">space-8</span><div class="bar" style="width: 40px;"></div><span class="val">40 px</span></div>
+        <div class="space-row"><span class="name">space-9</span><div class="bar" style="width: 48px;"></div><span class="val">48 px</span></div>
+        <div class="space-row"><span class="name">space-10</span><div class="bar" style="width: 64px;"></div><span class="val">64 px</span></div>
+        <div class="space-row"><span class="name">space-11</span><div class="bar" style="width: 96px;"></div><span class="val">96 px</span></div>
+        <div class="space-row"><span class="name">space-12</span><div class="bar" style="width: 128px;"></div><span class="val">128 px</span></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="space-card">
+          <h4 class="mono" style="color: var(--muted); margin-bottom: 16px;">5.2 — Raios</h4>
+          <div class="radius-grid">
+            <div class="radius-card" style="border-radius: 2px;"><div class="l">r-1</div><div class="v">2</div></div>
+            <div class="radius-card" style="border-radius: 4px;"><div class="l">r-2</div><div class="v">4</div></div>
+            <div class="radius-card" style="border-radius: 8px;"><div class="l">r-3</div><div class="v">8</div></div>
+            <div class="radius-card" style="border-radius: 12px;"><div class="l">r-4</div><div class="v">12</div></div>
+            <div class="radius-card" style="border-radius: 16px;"><div class="l">r-5</div><div class="v">16</div></div>
+            <div class="radius-card" style="border-radius: 999px;"><div class="l">r-∞</div><div class="v">pill</div></div>
+          </div>
+        </div>
+
+        <div class="space-card">
+          <h4 class="mono" style="color: var(--muted); margin-bottom: 16px;">5.3 — Grid de produto · 12 colunas</h4>
+          <div class="grid-demo">
+            <div class="col" data-n="1"></div><div class="col" data-n="2"></div><div class="col" data-n="3"></div><div class="col" data-n="4"></div><div class="col" data-n="5"></div><div class="col" data-n="6"></div><div class="col" data-n="7"></div><div class="col" data-n="8"></div><div class="col" data-n="9"></div><div class="col" data-n="10"></div><div class="col" data-n="11"></div><div class="col" data-n="12"></div>
+          </div>
+          <p style="font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 16px; letter-spacing: 0.08em; text-transform: uppercase;">Gutter 16 · Padding lateral 32 · Max-width 1440</p>
+        </div>
+
+        <div class="space-card">
+          <h4 class="mono" style="color: var(--muted); margin-bottom: 16px;">5.4 — Elevação</h4>
+          <div style="display: grid; grid-template-columns: repeat(4,1fr); gap: 16px;">
+            <div style="aspect-ratio: 1/1; background: var(--surface-1); border: 1px solid var(--hairline); border-radius: 12px; display: flex; align-items: flex-end; padding: 14px;"><div><div class="mono" style="font-size: 10px;">e-0</div><div style="font-family: var(--font-display); font-style: italic; font-size: 22px;">Flat</div></div></div>
+            <div style="aspect-ratio: 1/1; background: var(--surface-2); border: 1px solid var(--hairline-strong); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: flex-end; padding: 14px;"><div><div class="mono" style="font-size: 10px;">e-1</div><div style="font-family: var(--font-display); font-style: italic; font-size: 22px;">Lift</div></div></div>
+            <div style="aspect-ratio: 1/1; background: var(--surface-3); border: 1px solid var(--hairline-strong); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); display: flex; align-items: flex-end; padding: 14px;"><div><div class="mono" style="font-size: 10px;">e-2</div><div style="font-family: var(--font-display); font-style: italic; font-size: 22px;">Float</div></div></div>
+            <div style="aspect-ratio: 1/1; background: var(--surface-3); border-radius: 12px; box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(124,58,237,0.3), 0 0 40px -10px rgba(124,58,237,0.5); display: flex; align-items: flex-end; padding: 14px;"><div><div class="mono" style="font-size: 10px;">e-3 · glow</div><div style="font-family: var(--font-display); font-style: italic; font-size: 22px;">Brand</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== COMPONENTS ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">06</span>Componentes</div>
+      <div>
+        <h2>Peças <span class="em">recombináveis.</span></h2>
+        <p class="lede">Componentes de produto pensados para densidade. Botões compactos, inputs com label mono, badges semânticos. Tudo respeitando os tokens das seções anteriores.</p>
+      </div>
+    </div>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <h4>6.1 — Botões</h4>
+        <div class="comp-row">
+          <button class="btn primary">Analisar peça <span class="arrow">→</span></button>
+          <button class="btn secondary">Salvar rascunho</button>
+          <button class="btn ghost">Cancelar</button>
+          <button class="btn danger">Arquivar</button>
+        </div>
+        <div class="comp-row">
+          <button class="btn primary lg">Iniciar nova análise <span class="arrow">→</span></button>
+          <button class="btn secondary sm">Exportar PDF</button>
+          <button class="btn ghost sm">Compartilhar</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <h4 style="margin-top: 24px;">6.2 — Inputs &amp; campos</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Número do processo</label>
+            <input class="input" value="0001234-56.2025.8.26.0100" />
+            <span class="hint">Formato CNJ · 20 dígitos</span>
+          </div>
+          <div class="field">
+            <label>Tribunal</label>
+            <input class="input" placeholder="Selecione…" />
+            <span class="hint">Busca em 92 tribunais</span>
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label>Prompt para a IA</label>
+            <input class="input" style="padding: 14px; font-size: 15px;" value="Resuma os fundamentos do acórdão e aponte teses divergentes." />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h4 style="margin-top: 24px;">6.3 — Tabs &amp; toggles</h4>
+        <div class="comp-row">
+          <div class="tabs">
+            <div class="tab active">Resumo</div>
+            <div class="tab">Jurisprudência</div>
+            <div class="tab">Prazos</div>
+            <div class="tab">Histórico</div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; margin-left: 16px;">
+            <span style="font-size: 13px; color: var(--ink-300);">Modo expert</span>
+            <div class="switch on"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="comp-card">
+          <h4>6.4 — Badges</h4>
+          <div class="comp-row">
+            <span class="badge brand"><span class="dot"></span>IA · Confiança 92%</span>
+            <span class="badge ok"><span class="dot"></span>Deferido</span>
+            <span class="badge warn"><span class="dot"></span>Prazo · 3 dias</span>
+            <span class="badge bad"><span class="dot"></span>Indeferido</span>
+            <span class="badge neutral">Arquivado</span>
+          </div>
+        </div>
+
+        <div class="comp-card">
+          <h4>6.5 — Chips de contexto</h4>
+          <div class="comp-row">
+            <span class="chip"><span class="avatar"></span>Dra. Marina · Cível</span>
+            <span class="chip"><span class="avatar"></span>Equipe Trabalhista</span>
+            <span class="chip"><span class="avatar"></span>STJ · 2ª Turma</span>
+          </div>
+        </div>
+
+        <div class="comp-card">
+          <h4>6.6 — Progresso &amp; presença</h4>
+          <div class="comp-row" style="flex-direction: column; align-items: stretch; gap: 12px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                <span class="mono" style="font-size: 11px; color: var(--muted);">Análise da peça</span>
+                <span class="mono" style="font-size: 11px; color: var(--juris-300);">68%</span>
+              </div>
+              <div class="progress"><div class="fill" style="width: 68%;"></div></div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div class="avatars">
+                <div class="a"></div><div class="a a2"></div><div class="a a3"></div><div class="a a4">+4</div>
+              </div>
+              <span style="font-size: 12px; color: var(--ink-300);">7 advogados no caso</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== BENTO ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">07</span>Bento</div>
+      <div>
+        <h2>Composições de <span class="em">cartões.</span></h2>
+        <p class="lede">O bento é a unidade de composição. Tudo se monta dele: dashboards, landing pages, briefings. Três regras: âncora maior à esquerda, métrica em itálico-serifa, mono nos rótulos.</p>
+      </div>
+    </div>
+
+    <div class="bento">
+      <div class="b-card bento-hero">
+        <div class="b-head">
+          <span class="b-title">07.1 · Card âncora</span>
+          <span class="badge brand"><span class="dot"></span>IA · ao vivo</span>
+        </div>
+        <h3 class="display"><em>Três precedentes</em> sustentam a tese principal.</h3>
+        <div class="footer">
+          <div>
+            <p class="b-sub" style="max-width: 42ch;">O modelo identificou aderência acima de 80% em decisões recentes do STJ — duas favoráveis, uma parcialmente convergente.</p>
+          </div>
+          <button class="btn primary">Abrir análise <span class="arrow">→</span></button>
+        </div>
+      </div>
+
+      <div class="b-card bento-pill" style="background: var(--grad-brand); border: none;">
+        <div class="b-head"><span class="b-title" style="color: rgba(255,255,255,0.7);">07.2 · Highlight</span></div>
+        <div class="b-num" style="color: white; -webkit-text-fill-color: white;">84%</div>
+        <div class="b-sub" style="color: rgba(255,255,255,0.85);">aderência média da semana</div>
+      </div>
+
+      <div class="b-card bento-mid">
+        <div class="b-head"><span class="b-title">07.3 · KPI</span><span class="mono" style="color: var(--ok);">+12%</span></div>
+        <div class="b-num">128</div>
+        <div class="b-sub">peças analisadas em maio</div>
+        <svg class="spark" viewBox="0 0 200 60" preserveAspectRatio="none" style="margin-top: 16px;">
+          <path class="area" d="M0,50 L20,42 L40,46 L60,35 L80,30 L100,32 L120,22 L140,18 L160,24 L180,14 L200,18 L200,60 L0,60 Z"/>
+          <path class="line" d="M0,50 L20,42 L40,46 L60,35 L80,30 L100,32 L120,22 L140,18 L160,24 L180,14 L200,18"/>
+        </svg>
+      </div>
+
+      <div class="b-card bento-mid">
+        <div class="b-head"><span class="b-title">07.4 · Documento</span><span class="badge ok"><span class="dot"></span>Pronto</span></div>
+        <div class="doc-mock" style="margin-top: 6px;">
+          <div class="line s80"></div>
+          <div class="line s60"></div>
+          <div class="line highlight s80"></div>
+          <div class="line s40"></div>
+          <div class="line s60"></div>
+          <div class="line highlight s60"></div>
+          <div class="line s80"></div>
+          <div class="line s40"></div>
+        </div>
+        <div class="b-sub" style="margin-top: 14px;">Trechos destacados pela IA</div>
+      </div>
+
+      <div class="b-card bento-stat" style="background: var(--surface-2);">
+        <div class="b-head"><span class="b-title">07.5</span></div>
+        <div style="font-family: var(--font-display); font-style: italic; font-size: 40px; line-height: 1; color: var(--text);">3.2s</div>
+        <div class="b-sub">tempo médio de resposta</div>
+      </div>
+      <div class="b-card bento-stat">
+        <div class="b-head"><span class="b-title">07.6</span></div>
+        <div style="font-family: var(--font-display); font-style: italic; font-size: 40px; line-height: 1; color: var(--juris-200);">17</div>
+        <div class="b-sub">prazos esta semana</div>
+      </div>
+      <div class="b-card bento-stat" style="background: var(--surface-2);">
+        <div class="b-head"><span class="b-title">07.7</span></div>
+        <div style="font-family: var(--font-display); font-style: italic; font-size: 40px; line-height: 1;">94%</div>
+        <div class="b-sub">precisão verificada</div>
+      </div>
+      <div class="b-card bento-stat">
+        <div class="b-head"><span class="b-title">07.8</span></div>
+        <div style="font-family: var(--font-display); font-style: italic; font-size: 40px; line-height: 1; color: var(--juris-200);">42h</div>
+        <div class="b-sub">economizadas / mês</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== APPLICATION ============== -->
+  <section>
+    <div class="section-head">
+      <div class="index"><span class="num">08</span>Aplicação</div>
+      <div>
+        <h2>O sistema <span class="em">em produção.</span></h2>
+        <p class="lede">Uma tela do painel principal do Juris8 montada inteiramente com os tokens, componentes e padrões deste documento. Nada é hand-painted — tudo recombina.</p>
+      </div>
+    </div>
+
+    <div class="app-frame">
+      <div class="app-topbar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="url"><span class="lock">●</span>app.juris8.ai/painel</div>
+        <div class="mono" style="font-size: 10px;">15 MAI 2026 · 14:22</div>
+      </div>
+      <div class="app-body">
+        <aside class="app-sidebar">
+          <div class="sb-brand">
+            <div class="mark">j8</div>
+            <div class="name">Juris<span style="color: var(--juris-300); font-family: var(--font-display); font-style: italic;">8</span><span class="sup">.ai</span></div>
+          </div>
+          <div class="sb-section">
+            <div class="sb-label">Trabalho</div>
+            <div class="sb-item active"><span class="ic"></span>Painel<span class="count">128</span></div>
+            <div class="sb-item"><span class="ic"></span>Processos<span class="count">42</span></div>
+            <div class="sb-item"><span class="ic"></span>Peças<span class="count">17</span></div>
+            <div class="sb-item"><span class="ic"></span>Prazos<span class="count" style="color: var(--warn);">3</span></div>
+          </div>
+          <div class="sb-section">
+            <div class="sb-label">IA</div>
+            <div class="sb-item"><span class="ic"></span>Pesquisa</div>
+            <div class="sb-item"><span class="ic"></span>Redação</div>
+            <div class="sb-item"><span class="ic"></span>Jurisprudência</div>
+            <div class="sb-item"><span class="ic"></span>Histórico</div>
+          </div>
+          <div class="sb-section" style="margin-top: auto;">
+            <div class="sb-label">Escritório</div>
+            <div class="sb-item"><span class="ic"></span>Equipe</div>
+            <div class="sb-item"><span class="ic"></span>Configurações</div>
+          </div>
+        </aside>
+        <main class="app-main">
+          <div class="app-header">
+            <div>
+              <div class="crumb">Painel · Visão geral</div>
+              <h2 style="margin-top: 8px;">Bom dia, <em>Marina.</em></h2>
+              <p style="margin-top: 6px; color: var(--ink-300);">Você tem 3 prazos esta semana e 7 peças aguardando revisão.</p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+              <button class="btn ghost sm">Filtrar</button>
+              <button class="btn primary">Nova análise <span class="arrow">→</span></button>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat">
+              <span class="l">Processos ativos</span>
+              <span class="v">42</span>
+              <span class="delta up">▲ 4 esta semana</span>
+            </div>
+            <div class="stat">
+              <span class="l">Peças em revisão</span>
+              <span class="v">17</span>
+              <span class="delta up">▲ 2 hoje</span>
+            </div>
+            <div class="stat">
+              <span class="l">Aderência IA</span>
+              <span class="v" style="color: var(--juris-200);">84%</span>
+              <span class="delta up">▲ 6 pontos</span>
+            </div>
+            <div class="stat">
+              <span class="l">Prazos críticos</span>
+              <span class="v" style="color: var(--warn);">3</span>
+              <span class="delta down">▼ próximo: 17/05</span>
+            </div>
+          </div>
+
+          <div class="app-bento">
+            <div class="panel">
+              <div class="panel-head">
+                <h4>Processos recentes</h4>
+                <span class="more">Ver tudo →</span>
+              </div>
+              <div class="case-list">
+                <div class="case-row">
+                  <div class="ico">CV</div>
+                  <div>
+                    <div class="ttl">Ação revisional · Banco X</div>
+                    <div class="sub">0001234-56.2025.8.26.0100</div>
+                  </div>
+                  <span class="badge ok"><span class="dot"></span>Deferido</span>
+                  <span class="date">14 MAI · 09:12</span>
+                  <span class="mono" style="font-size: 11px; color: var(--juris-300); text-align: right;">92% ●</span>
+                </div>
+                <div class="case-row">
+                  <div class="ico">TR</div>
+                  <div>
+                    <div class="ttl">Reclamatória trabalhista · Construtora</div>
+                    <div class="sub">0007891-23.2024.5.02.0033</div>
+                  </div>
+                  <span class="badge warn"><span class="dot"></span>Prazo · 3d</span>
+                  <span class="date">13 MAI · 16:48</span>
+                  <span class="mono" style="font-size: 11px; color: var(--juris-300); text-align: right;">78% ●</span>
+                </div>
+                <div class="case-row">
+                  <div class="ico">TR</div>
+                  <div>
+                    <div class="ttl">Recurso ordinário · TST</div>
+                    <div class="sub">0023456-78.2024.5.00.0000</div>
+                  </div>
+                  <span class="badge brand"><span class="dot"></span>Em análise</span>
+                  <span class="date">13 MAI · 11:02</span>
+                  <span class="mono" style="font-size: 11px; color: var(--juris-300); text-align: right;">66% ●</span>
+                </div>
+                <div class="case-row">
+                  <div class="ico">CV</div>
+                  <div>
+                    <div class="ttl">Indenização por danos morais</div>
+                    <div class="sub">0009823-45.2025.8.26.0224</div>
+                  </div>
+                  <span class="badge bad"><span class="dot"></span>Indeferido</span>
+                  <span class="date">12 MAI · 18:30</span>
+                  <span class="mono" style="font-size: 11px; color: var(--juris-300); text-align: right;">88% ●</span>
+                </div>
+                <div class="case-row">
+                  <div class="ico">CV</div>
+                  <div>
+                    <div class="ttl">Cumprimento de sentença</div>
+                    <div class="sub">0002145-67.2023.8.26.0100</div>
+                  </div>
+                  <span class="badge neutral">Aguardando</span>
+                  <span class="date">11 MAI · 10:14</span>
+                  <span class="mono" style="font-size: 11px; color: var(--juris-300); text-align: right;">— </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel ai-card">
+              <div class="panel-head">
+                <h4>Assistente jurídico</h4>
+                <span class="badge brand"><span class="dot"></span>j8</span>
+              </div>
+              <div class="ai-msg">
+                Encontrei <span class="hl">três precedentes recentes do STJ</span> que sustentam a tese principal da reclamatória trabalhista. Quer que eu redija a fundamentação para a apelação?
+              </div>
+              <div class="ai-msg" style="background: rgba(124,58,237,0.10); border-color: rgba(124,58,237,0.25);">
+                Também observo que o <span class="hl">prazo prescricional</span> vence em 12 dias — sugiro priorizar a peça desta semana.
+              </div>
+              <div class="ai-input">
+                <input placeholder="Pergunte algo sobre seus processos…" />
+                <div class="send">↑</div>
+              </div>
+              <p style="font-family: var(--font-mono); font-size: 10px; color: var(--dim); margin-top: 12px; letter-spacing: 0.1em; text-transform: uppercase;">
+                Modelo j8-pro · contexto: 42 processos · 12.4k peças
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="foot">
+    <div>
+      <div class="eyebrow" style="margin-bottom: 16px;">Fim do documento</div>
+      <h3>Um sistema é tão bom quanto sua <em>aplicação consistente.</em></h3>
+      <p style="margin-top: 24px; max-width: 38ch;">Quando em dúvida, prefira o silêncio: menos cor, menos peso, menos forma. O Juris8 ganha onde a interface desaparece.</p>
+    </div>
+    <div class="col">
+      <span class="h">Tokens</span>
+      <a>colors.json</a>
+      <a>typography.css</a>
+      <a>spacing.css</a>
+      <a>shadows.css</a>
+    </div>
+    <div class="col">
+      <span class="h">Componentes</span>
+      <a>@juris8/ui</a>
+      <a>Storybook</a>
+      <a>Figma library</a>
+      <a>Templates</a>
+    </div>
+    <div class="col">
+      <span class="h">Governança</span>
+      <a>Changelog v1.0</a>
+      <a>Solicitar componente</a>
+      <a>Contribuir</a>
+      <a>design@juris8.ai</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

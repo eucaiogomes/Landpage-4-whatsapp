@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Juris8 — IA jurídica para advogados</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ==============================
+   DESIGN SYSTEM TOKENS
+============================== */
+:root {
+  --juris-50:#F4EEFF;--juris-100:#E6D9FF;--juris-200:#CFB4FF;
+  --juris-300:#B388FB;--juris-400:#9A63F0;--juris-500:#7C3AED;
+  --juris-600:#6324C9;--juris-700:#4C1A9E;--juris-800:#361074;
+  --juris-900:#200A4D;--juris-950:#130530;
+  --ink-50:#F6F4FB;--ink-100:#ECE9F5;--ink-200:#D5D1E6;
+  --ink-300:#ADA7C7;--ink-400:#807AA0;--ink-500:#5B557A;
+  --ink-600:#3F3A5C;--ink-700:#2A2645;--ink-800:#1A1730;
+  --ink-900:#110E22;--ink-950:#07050F;
+  --ok:#4ADE80;--warn:#F5B454;--bad:#FB7185;--info:#7DD3FC;
+  --bg:var(--ink-950);
+  --surface-1:#0D0B1C;--surface-2:#14112A;--surface-3:#1B1738;
+  --hairline:rgba(255,255,255,0.06);
+  --hairline-strong:rgba(255,255,255,0.11);
+  --text:#EDEAF7;--muted:#9C95BD;--dim:#6E6890;
+  --grad-brand:linear-gradient(135deg,#2A0F6E 0%,#6028D9 45%,#B788FF 100%);
+  --glow:0 0 0 1px rgba(124,58,237,0.35),0 0 40px -8px rgba(124,58,237,0.45);
+  --r-2:4px;--r-3:8px;--r-4:12px;--r-5:16px;--r-6:20px;--r-7:28px;
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;--s-6:24px;
+  --s-7:32px;--s-8:40px;--s-9:48px;--s-10:64px;--s-11:96px;--s-12:128px;
+  --font-display:'Instrument Serif','Times New Roman',serif;
+  --font-sans:'Geist',system-ui,sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,monospace;
+}
+
+/* ==============================
+   BASE
+============================== */
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-sans);font-weight:400;font-size:15px;
+  line-height:1.55;letter-spacing:-0.005em;
+  -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;
+  overflow-x:hidden;
+}
+::selection{background:var(--juris-500);color:white;}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(900px 600px at 82% -8%,rgba(124,58,237,0.2),transparent 60%),
+    radial-gradient(700px 500px at -8% 35%,rgba(76,26,158,0.14),transparent 65%),
+    radial-gradient(800px 800px at 50% 110%,rgba(183,136,255,0.07),transparent 70%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+  background-size:64px 64px;background-position:-1px -1px;
+  pointer-events:none;z-index:0;
+  mask-image:radial-gradient(ellipse at 50% 30%,black 30%,transparent 80%);
+}
+
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px);will-change:transform;}
+.orb-1{width:700px;height:700px;top:-200px;right:-150px;background:radial-gradient(circle,rgba(124,58,237,0.18) 0%,transparent 70%);}
+.orb-2{width:500px;height:500px;bottom:100px;left:-150px;background:radial-gradient(circle,rgba(76,26,158,0.14) 0%,transparent 70%);}
+
+/* ==============================
+   LAYOUT
+============================== */
+.shell{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 64px;}
+section{padding:96px 0;border-bottom:1px solid var(--hairline);}
+section:last-of-type{border-bottom:none;}
+
+/* ==============================
+   ANIMATIONS
+============================== */
+@keyframes pulse-glow{
+  0%,100%{box-shadow:0 0 12px var(--juris-300);opacity:1;}
+  50%{box-shadow:0 0 4px var(--juris-300);opacity:0.6;}
+}
+@keyframes float{
+  0%,100%{transform:translateY(0px);}
+  50%{transform:translateY(-10px);}
+}
+@keyframes shimmer-line{
+  0%,100%{opacity:1;}50%{opacity:0.45;}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(28px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}
+.d3{transition-delay:0.3s;}.d4{transition-delay:0.4s;}
+
+/* ==============================
+   NAVBAR
+============================== */
+.navbar{
+  position:sticky;top:0;z-index:100;padding:14px 0;
+  background:rgba(7,5,15,0.75);
+  backdrop-filter:blur(20px) saturate(1.3);
+  -webkit-backdrop-filter:blur(20px) saturate(1.3);
+  border-bottom:1px solid var(--hairline);
+  transition:background 0.3s ease;
+}
+.navbar-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
+.nav-logo-wrap{width:200px;height:50px;border-radius:10px;overflow:hidden;flex-shrink:0;}
+.nav-logo{width:200px;height:auto;display:block;margin-left:-30px;margin-top:-11px;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{font-size:13px;color:var(--ink-300);text-decoration:none;padding:6px 12px;border-radius:8px;transition:0.15s ease;}
+.nav-link:hover{color:var(--text);background:var(--surface-3);}
+
+/* ==============================
+   BUTTONS
+============================== */
+.btn{
+  font-family:var(--font-sans);font-weight:500;font-size:14px;
+  padding:11px 18px;border-radius:10px;border:1px solid transparent;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  letter-spacing:-0.005em;transition:all 0.2s ease;text-decoration:none;white-space:nowrap;
+}
+.btn.primary{
+  background:linear-gradient(180deg,#8B5CF6,#6324C9);color:white;
+  box-shadow:0 1px 0 rgba(255,255,255,0.18) inset,0 8px 24px -10px rgba(124,58,237,0.55);
+}
+.btn.primary:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,0.18) inset,0 16px 32px -8px rgba(124,58,237,0.65);}
+.btn.secondary{background:var(--surface-3);color:var(--text);border-color:var(--hairline-strong);}
+.btn.secondary:hover{background:var(--surface-2);transform:translateY(-1px);border-color:rgba(179,136,251,0.25);}
+.btn.ghost{background:transparent;color:var(--ink-200);border-color:var(--hairline-strong);}
+.btn.ghost:hover{color:var(--text);background:var(--surface-3);}
+.btn.sm{font-size:13px;padding:7px 14px;border-radius:8px;}
+.btn.lg{font-size:16px;padding:15px 28px;}
+.btn .arrow{font-family:var(--font-mono);}
+.btn-group{display:flex;gap:12px;align-items:center;}
+
+/* ==============================
+   BADGES
+============================== */
+.badge{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;padding:4px 8px;border-radius:6px;border:1px solid;
+  display:inline-flex;gap:6px;align-items:center;white-space:nowrap;
+}
+.badge.brand{background:rgba(124,58,237,0.14);color:var(--juris-300);border-color:rgba(124,58,237,0.3);}
+.badge.ok{background:rgba(74,222,128,0.12);color:var(--ok);border-color:rgba(74,222,128,0.28);}
+.badge.warn{background:rgba(245,180,84,0.12);color:var(--warn);border-color:rgba(245,180,84,0.28);}
+.badge.info{background:rgba(125,211,252,0.12);color:var(--info);border-color:rgba(125,211,252,0.28);}
+.badge.neutral{background:var(--ink-800);color:var(--ink-300);border-color:var(--hairline-strong);}
+.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ==============================
+   TYPOGRAPHY HELPERS
+============================== */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-mono);font-size:11px;text-transform:uppercase;
+  letter-spacing:0.14em;color:var(--juris-300);
+}
+.eyebrow::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--juris-300);flex-shrink:0;
+  animation:pulse-glow 2.5s ease infinite;
+}
+.mono{font-family:var(--font-mono);font-weight:400;text-transform:uppercase;letter-spacing:0.08em;font-size:11px;color:var(--muted);}
+h1,h2,h3,h4{font-family:var(--font-sans);font-weight:500;letter-spacing:-0.02em;margin:0;}
+h2{font-size:48px;line-height:1.05;}
+h3{font-size:22px;line-height:1.25;}
+h4{font-size:15px;line-height:1.35;}
+p{margin:0;color:var(--ink-200);}
+
+.section-head{display:grid;grid-template-columns:280px 1fr;gap:64px;align-items:end;margin-bottom:56px;}
+.section-head .index{font-family:var(--font-mono);font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:0.16em;}
+.section-head .index .num{display:block;font-family:var(--font-display);font-size:64px;line-height:1;color:var(--juris-300);letter-spacing:-0.03em;margin-bottom:8px;}
+.section-head h2 .em{font-family:var(--font-display);font-weight:500;color:var(--juris-200);}
+.section-head .lede{color:var(--ink-300);max-width:56ch;margin-top:16px;}
+
+/* ==============================
+   HERO
+============================== */
+.hero-section{
+  padding:96px 0 80px;border-bottom:1px solid var(--hairline);
+  position:relative;overflow:hidden;
+}
+.hero-inner{display:flex;flex-direction:column;align-items:center;gap:48px;width:100%;}
+.hero-content{display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px;max-width:880px;}
+
+.hero-h1{
+  font-family:var(--font-display);
+  font-size:72px;line-height:1.0;
+  letter-spacing:-0.03em;font-weight:500;margin:0;color:var(--text);
+}
+.hero-h1 .grad{
+  background:linear-gradient(135deg,#FFFFFF 0%,#C4A0FF 40%,#7C3AED 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-h1 .it{color:var(--juris-200);}
+.hero-sub{font-size:18px;color:var(--ink-200);line-height:1.6;max-width:58ch;}
+.hero-tag{font-size:12px;color:var(--dim);font-family:var(--font-mono);letter-spacing:0.04em;line-height:1.6;max-width:64ch;text-align:center;}
+.hero-content .btn-group{justify-content:center;}
+
+/* Demo chat (animated, non-interactive) */
+.hero-chat{width:100%;max-width:1040px;display:flex;flex-direction:column;gap:18px;}
+.chat-frame{
+  background:var(--surface-1);border:1px solid var(--hairline-strong);
+  border-radius:var(--r-7);padding:32px;
+  box-shadow:0 48px 96px -24px rgba(0,0,0,0.65),0 0 0 1px rgba(124,58,237,0.08),0 0 100px -20px rgba(124,58,237,0.25);
+  display:flex;flex-direction:column;gap:22px;min-height:420px;
+}
+.chat-greeting{font-family:var(--font-display);font-size:24px;letter-spacing:-0.02em;color:var(--ink-200);text-align:center;font-weight:400;}
+.chat-greeting .em{color:var(--juris-200);}
+.chat-stream{display:flex;flex-direction:column;gap:14px;min-height:240px;padding:4px 2px;}
+.chat-msg{display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(6px);animation:msgIn 0.45s ease-out forwards;}
+@keyframes msgIn{to{opacity:1;transform:none;}}
+.chat-msg .av{width:28px;height:28px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0.04em;}
+.chat-msg.user .av{background:var(--surface-3);color:var(--ink-200);}
+.chat-msg.ai .av{background:var(--grad-brand);color:#fff;font-family:var(--font-display);}
+.chat-bubble{font-size:13.5px;line-height:1.6;color:var(--ink-100);background:var(--ink-900);border:1px solid var(--hairline);border-radius:var(--r-4);padding:12px 16px;flex:1;}
+.chat-msg.user .chat-bubble{background:transparent;color:var(--ink-200);border-color:var(--hairline);}
+.chat-bubble .hl{background:rgba(124,58,237,0.22);color:var(--juris-200);padding:0 4px;border-radius:3px;}
+.chat-bubble .caret{display:inline-block;width:7px;height:14px;background:var(--juris-200);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(2) infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+/* Task list (AI agent working) */
+.task-list{margin-top:10px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--hairline);padding-top:12px;}
+.task{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-300);opacity:0;transform:translateX(-4px);transition:opacity .35s ease, transform .35s ease, color .25s ease;}
+.task.show{opacity:1;transform:none;}
+.task.done{color:var(--ink-100);}
+.task .tk-ic{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--juris-400);position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.task.run .tk-ic{border-top-color:transparent;animation:spin .8s linear infinite;}
+.task.done .tk-ic{background:var(--grad-brand);border-color:transparent;}
+.task.done .tk-ic::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 1.8px 1.8px 0;transform:rotate(45deg) translate(-1px,-1px);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.task .tk-tag{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);margin-left:auto;letter-spacing:0.04em;}
+
+/* Static input bar (visual only) */
+.chat-inputbar{
+  background:var(--ink-900);border:1px solid var(--hairline-strong);border-radius:var(--r-5);
+  padding:14px 16px;display:flex;flex-direction:column;gap:10px;
+  pointer-events:none;user-select:none;
+}
+.chat-input-fake{
+  width:100%;font-size:14.5px;line-height:1.55;color:var(--dim);
+  min-height:48px;display:flex;align-items:flex-start;padding-top:4px;
+}
+.chat-input-fake .typed{color:var(--text);}
+.chat-toolrow{display:flex;align-items:center;gap:8px;}
+.chat-iconbtn{width:30px;height:30px;border-radius:8px;background:transparent;border:1px solid var(--hairline);color:var(--ink-300);display:inline-flex;align-items:center;justify-content:center;font-size:13px;}
+.chat-send{margin-left:auto;background:var(--grad-brand);color:#fff;border:0;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 6px 18px -6px rgba(124,58,237,0.6);}
+
+.chat-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.chat-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface-2);border:1px solid var(--hairline);
+  color:var(--ink-200);font-size:12.5px;font-weight:500;
+  padding:9px 14px;border-radius:999px;
+}
+.chat-chip .ic{font-size:13px;color:var(--juris-200);}
+
+/* ==============================
+   FEATURES PARALLAX
+============================== */
+.features-section{padding:0;border-bottom:1px solid var(--hairline);}
+.features-intro{padding:96px 0 64px;text-align:center;display:flex;flex-direction:column;align-items:center;}
+.features-intro .lede{font-family:var(--font-display);font-size:32px;line-height:1.2;letter-spacing:-0.02em;color:var(--ink-200);max-width:42ch;margin-top:24px;font-weight:500;text-align:center;}
+.features-intro .lede em{color:var(--juris-200);font-style:normal;}
+
+/* Simplified 4-column grid (no parallax) */
+.features-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:32px;
+  padding:24px 0 96px;border-top:1px solid var(--hairline);padding-top:64px;
+}
+.feature-item{
+  display:flex;flex-direction:column;gap:18px;
+  padding:8px 4px;position:relative;
+}
+.feature-item + .feature-item{
+  border-left:1px solid var(--hairline);padding-left:32px;
+}
+.feature-icon{
+  width:56px;height:56px;border-radius:var(--r-4);
+  background:linear-gradient(135deg,rgba(124,58,237,0.22),rgba(183,136,255,0.08));
+  border:1px solid rgba(124,58,237,0.22);
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  margin-bottom:4px;
+}
+.feature-num{font-family:var(--font-mono);font-size:10px;color:var(--juris-300);letter-spacing:0.14em;text-transform:uppercase;}
+.feature-title{font-size:18px;line-height:1.3;letter-spacing:-0.01em;color:var(--text);font-weight:500;}
+.feature-title em{font-family:var(--font-display);font-style:italic;font-weight:400;color:var(--juris-200);}
+.feature-body{font-size:14px;color:var(--ink-300);line-height:1.65;}
+
+.feature-visual-wrap{
+  position:relative;
+  will-change:transform;
+}
+.feature-card{
+  background:var(--surface-1);border:1px solid var(--hairline);
+  border-radius:var(--r-6);padding:36px;
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s ease,box-shadow 0.3s ease;
+}
+.feature-card:hover{border-color:rgba(179,136,251,0.22);box-shadow:0 8px 40px -8px rgba(124,58,237,0.22);}
+.feature-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 80% 10%,rgba(124,58,237,0.1),transparent 60%);
+  pointer-events:none;
+}
+.feature-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.feature-card-icon{
+  width:48px;height:48px;border-radius:var(--r-4);
+  background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(183,136,255,0.12));
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  border:1px solid rgba(124,58,237,0.2);
+}
+
+/* Doc mock */
+.doc-mock{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
+.dl{height:9px;background:var(--ink-700);border-radius:3px;}
+.dl.hl{background:linear-gradient(90deg,rgba(124,58,237,0.5),rgba(124,58,237,0.12));animation:shimmer-line 2.4s ease infinite;}
+.dl.w90{width:90%;}.dl.w80{width:80%;}.dl.w70{width:70%;}
+.dl.w60{width:60%;}.dl.w50{width:50%;}.dl.w40{width:40%;}
+
+/* Juris tree */
+.juris-list{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+.juris-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:var(--r-4);
+  background:var(--surface-2);border:1px solid var(--hairline);
+  font-size:13px;
+}
+.juris-item .ji-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.juris-item .ji-label{color:var(--text);font-weight:500;}
+.juris-item .ji-meta{font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-left:auto;letter-spacing:0.06em;}
+.ji-dot.stj{background:var(--ok);}
+.ji-dot.stf{background:var(--juris-300);}
+.ji-dot.trt{background:var(--info);}
+.ji-dot.tjsp{background:var(--warn);}
+
+/* Analysis bars */
+.analysis-items{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.analysis-row{display:flex;flex-direction:column;gap:6px;}
+.analysis-row .ar-label{display:flex;justify-content:space-between;font-size:12px;}
+.analysis-row .ar-name{color:var(--ink-200);}
+.analysis-row .ar-pct{font-family:var(--font-mono);font-size:10px;color:var(--juris-300);}
+.abar{height:5px;background:var(--ink-800);border-radius:999px;overflow:hidden;}
+.abar .fill{height:100%;border-radius:999px;background:var(--grad-brand);}
+
+/* Transcription mock */
+.transcript-list{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+.transcript-line{
+  display:flex;gap:10px;font-size:13px;line-height:1.5;
+  padding-bottom:10px;border-bottom:1px solid var(--hairline);
+}
+.transcript-line:last-child{border-bottom:none;padding-bottom:0;}
+.tl-speaker{font-family:var(--font-mono);font-size:10px;color:var(--juris-300);letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;margin-top:2px;min-width:52px;}
+.tl-text{color:var(--ink-200);}
+.tl-text .tl-hl{color:var(--text);font-weight:500;}
+
+/* ==============================
+   B-CARD BENTO (DS component)
+============================== */
+.b-card{
+  background:var(--surface-1);border:1px solid var(--hairline);
+  border-radius:var(--r-5);padding:24px;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  transition:border-color 0.3s ease,box-shadow 0.3s ease,transform 0.25s ease;
+}
+.b-card:hover{border-color:rgba(179,136,251,0.22);box-shadow:0 8px 40px -8px rgba(124,58,237,0.22);transform:translateY(-2px);}
+.b-card .b-num{font-family:var(--font-display);font-style:italic;font-size:52px;line-height:1;background:linear-gradient(135deg,#FFFFFF 0%,#B388FB 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.b-card .b-title{font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;}
+.b-card .b-sub{color:var(--ink-300);font-size:12px;margin-top:4px;}
+
+/* ==============================
+   FAQ
+============================== */
+.faq-items{display:flex;flex-direction:column;}
+.faq-item{border-bottom:1px solid var(--hairline);}
+.faq-item:last-child{border-bottom:none;}
+.faq-head{
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;padding:22px 0;
+  font-size:16px;font-weight:500;color:var(--text);
+  transition:color 0.15s ease;gap:16px;user-select:none;
+}
+.faq-head:hover{color:var(--juris-300);}
+.faq-toggle{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:var(--surface-3);border:1px solid var(--hairline-strong);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:300;color:var(--juris-300);
+  transition:all 0.25s ease;line-height:1;
+}
+.faq-item.open .faq-toggle{transform:rotate(45deg);background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3);}
+.faq-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
+.faq-item.open .faq-body{max-height:600px;}
+.faq-body-inner{padding-bottom:22px;}
+.faq-body p{font-size:15px;line-height:1.65;color:var(--ink-200);}
+
+/* ==============================
+   CTA FINAL
+============================== */
+.cta-section{text-align:center;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,0.14) 0%,transparent 65%);pointer-events:none;}
+.cta-inner{position:relative;z-index:1;}
+.cta-h2{font-family:var(--font-display);font-size:56px;line-height:1.05;letter-spacing:-0.02em;font-weight:400;max-width:22ch;margin:20px auto 24px;}
+.cta-h2 em{font-style:italic;color:var(--juris-200);}
+.cta-sub{font-size:16px;color:var(--ink-300);max-width:52ch;margin:0 auto 40px;line-height:1.65;}
+
+/* ==============================
+   FOOTER
+============================== */
+.footer{padding:64px 0 80px;}
+.footer-content{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid var(--hairline);}
+.footer-col{display:flex;flex-direction:column;gap:10px;}
+.footer-brand{font-family:var(--font-display);font-size:36px;font-style:italic;letter-spacing:-0.02em;line-height:1;margin-bottom:6px;}
+.footer-col .lbl{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;}
+.footer-col a{color:var(--ink-300);text-decoration:none;font-size:13px;transition:color 0.15s ease;}
+.footer-col a:hover{color:var(--juris-300);}
+.footer-copy{padding-top:28px;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:11px;color:var(--dim);}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media(max-width:1024px){
+  .shell{padding:0 40px;}
+  .hero-h1{font-size:56px;}
+  .features-grid{grid-template-columns:repeat(2,1fr);gap:40px;}
+  .feature-item + .feature-item{border-left:none;padding-left:4px;}
+  .feature-item:nth-child(n+2){border-top:1px solid var(--hairline);padding-top:32px;}
+  .feature-item:nth-child(odd):not(:first-child){border-left:none;}
+  .section-head{grid-template-columns:1fr;gap:24px;}
+  .footer-content{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .shell{padding:0 20px;}
+  section{padding:64px 0;}
+  .hero-section{padding:48px 0 64px;}
+  .hero-h1{font-size:40px;}
+  .hero-sub{font-size:15px;}
+  .chat-frame{padding:18px;}
+  .chat-greeting{font-size:18px;}
+  .chat-chip{font-size:12px;padding:8px 12px;}
+  .btn-group{flex-direction:column;width:100%;}
+  .btn{width:100%;justify-content:center;}
+  h2{font-size:36px;}
+  .cta-h2{font-size:36px;}
+  .features-intro .lede{font-size:24px;}
+  .features-grid{grid-template-columns:1fr;gap:32px;}
+  .feature-item + .feature-item{border-top:1px solid var(--hairline);padding-top:32px;}
+  .feature-title{font-size:18px;}
+  .footer-content{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .section-head .index .num{font-size:48px;}
+  .footer-copy{flex-direction:column;gap:8px;text-align:center;}
+}
+/* ==============================
+   WHATSAPP FLOATING BUTTON
+============================== */
+.wa-float{
+  position:fixed;right:24px;bottom:24px;z-index:9999;
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 28px -8px rgba(37,211,102,0.55),0 0 0 1px rgba(255,255,255,0.06);
+  text-decoration:none;cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
+  animation:waPulse 2.4s ease-in-out infinite;
+}
+.wa-float:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 18px 36px -8px rgba(37,211,102,0.7);}
+.wa-float .wa-tip{
+  position:absolute;right:72px;top:50%;transform:translateY(-50%) translateX(6px);
+  background:var(--surface-1);color:var(--text);font-size:13px;font-weight:500;
+  padding:8px 14px;border-radius:10px;border:1px solid var(--hairline-strong);
+  white-space:nowrap;opacity:0;pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+  box-shadow:0 8px 24px -8px rgba(0,0,0,0.5);
+}
+.wa-float:hover .wa-tip{opacity:1;transform:translateY(-50%) translateX(0);}
+@keyframes waPulse{
+  0%,100%{box-shadow:0 12px 28px -8px rgba(37,211,102,0.55),0 0 0 0 rgba(37,211,102,0.45);}
+  50%{box-shadow:0 12px 28px -8px rgba(37,211,102,0.55),0 0 0 14px rgba(37,211,102,0);}
+}
+@media (max-width:720px){
+  .wa-float{width:54px;height:54px;right:16px;bottom:16px;}
+  .wa-float .wa-tip{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1" id="orb1"></div>
+<div class="orb orb-2" id="orb2"></div>
+
+<!-- ===== WHATSAPP FLOATING BUTTON ===== -->
+<a href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Juris8."
+   class="wa-float" target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp">
+  <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+    <path fill="#fff" d="M19.11 17.39c-.27-.14-1.62-.8-1.87-.89-.25-.09-.43-.14-.62.14-.18.27-.71.89-.87 1.07-.16.18-.32.2-.59.07-.27-.14-1.16-.43-2.21-1.36-.82-.73-1.37-1.63-1.53-1.9-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.62-1.49-.85-2.04-.22-.54-.45-.46-.62-.47l-.53-.01c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29 0 1.35.98 2.65 1.12 2.83.14.18 1.93 2.95 4.69 4.13.66.28 1.17.45 1.57.58.66.21 1.26.18 1.74.11.53-.08 1.62-.66 1.85-1.3.23-.64.23-1.18.16-1.3-.07-.12-.25-.18-.52-.32zM16.02 5.33c-5.89 0-10.67 4.78-10.67 10.66 0 1.88.5 3.71 1.43 5.32L5.33 26.67l5.51-1.44c1.55.85 3.31 1.3 5.18 1.3h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.52-3.12-7.54a10.6 10.6 0 0 0-7.55-3.13zm0 19.51h-.01a8.85 8.85 0 0 1-4.51-1.24l-.32-.19-3.27.86.87-3.18-.21-.33a8.85 8.85 0 0 1-1.36-4.73c0-4.89 3.98-8.86 8.87-8.86 2.37 0 4.6.92 6.27 2.6a8.83 8.83 0 0 1 2.6 6.27c0 4.89-3.98 8.87-8.86 8.87z"/>
+  </svg>
+  <span class="wa-tip">Fale no WhatsApp</span>
+</a>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="shell">
+    <div class="navbar-inner">
+      <a href="#" class="nav-brand">
+        <div class="nav-logo-wrap">
+          <img src="logo.png" alt="Juris8" class="nav-logo" />
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Funcionalidades</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </div>
+      <div class="btn-group">
+        <a href="#" class="btn ghost sm">Login</a>
+        <a href="#" class="btn primary sm">Faça seu Teste</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero-section">
+    <div class="hero-inner">
+
+      <div class="hero-content">
+        <div class="reveal">
+          <span class="eyebrow">IA jurídica para advogados</span>
+        </div>
+        <h1 class="hero-h1 reveal d1">
+          Junte-se a <span class="grad">milhares de advogados</span> e elimine o trabalho <span class="it">manual</span>.
+        </h1>
+        <p class="hero-sub reveal d2">
+          Aumente sua produtividade de ponta a ponta com a mais completa IA jurídica do Brasil.
+        </p>
+        <div class="reveal d3">
+          <div class="btn-group">
+            <a href="#" class="btn primary lg">→ Faça seu Teste</a>
+            <a href="#" class="btn secondary lg">Fale com Especialista</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-chat reveal d3">
+        <div class="chat-frame">
+          <div class="chat-greeting">Que <span class="em">peça</span> você deseja criar?</div>
+          <div class="chat-stream" id="chatStream"></div>
+          <div class="chat-inputbar" aria-hidden="true">
+            <div class="chat-input-fake"><span id="fakeTyped" class="typed"></span><span class="caret"></span></div>
+            <div class="chat-toolrow">
+              <span class="chat-iconbtn">📎</span>
+              <span class="chat-iconbtn">🎙️</span>
+              <span class="chat-send">↑</span>
+            </div>
+          </div>
+        </div>
+        <div class="chat-chips" aria-hidden="true">
+          <span class="chat-chip"><span class="ic">📅</span>Contestação Trabalhista</span>
+          <span class="chat-chip"><span class="ic">📅</span>Recurso Ordinário</span>
+          <span class="chat-chip"><span class="ic">📅</span>Recurso de Revista</span>
+          <span class="chat-chip"><span class="ic">📅</span>Contrato de Trabalho</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FEATURES PARALLAX ===== -->
+  <section class="features-section" id="features">
+    <div class="features-intro reveal">
+      <span class="eyebrow">Funcionalidades</span>
+      <p class="lede">Da elaboração de documentos jurídicos à transcrição de audiências, <em>devolvemos o seu tempo</em> no dia a dia.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-item reveal">
+        <div class="feature-icon">📋</div>
+        <div class="feature-num">01 — Redação</div>
+        <h3 class="feature-title">Pré-elaboração de peças processuais e contratos <em>em segundos</em></h3>
+        <p class="feature-body">Você não precisa começar tudo do zero! O Juris8 pré-elabora os documentos para que você dê apenas os toques finais. Quanto mais você dá tarefas ao Juris8, mais ele aprende seu estilo e forma de escrever.</p>
+      </div>
+
+      <div class="feature-item reveal d1">
+        <div class="feature-icon">⚖️</div>
+        <div class="feature-num">02 — Pesquisa</div>
+        <h3 class="feature-title">Localize jurisprudência de maneira <em>fácil, rápida e precisa</em></h3>
+        <p class="feature-body">Encontre com facilidade a jurisprudência ideal. O Juris8 analisa e identifica precedentes com contexto relevante, respeitando os seus critérios. Elimine horas de busca e foque na estratégia.</p>
+      </div>
+
+      <div class="feature-item reveal d2">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-num">03 — Análise</div>
+        <h3 class="feature-title">Análise de Documentos em profundidade <em>sem perder nenhum detalhe</em></h3>
+        <p class="feature-body">O Juris8 analisa documentos complexos de forma rápida e precisa, identificando pontos críticos e cruzando dados. Automatize a revisão de contratos, decisões judiciais e registros imobiliários.</p>
+      </div>
+
+      <div class="feature-item reveal d3">
+        <div class="feature-icon">🎙️</div>
+        <div class="feature-num">04 — Transcrição</div>
+        <h3 class="feature-title">Transcrição de Reuniões e Audiências com IA <em>mais do que notas</em></h3>
+        <p class="feature-body">O Juris8 transcreve suas reuniões e mapeia o que foi discutido em tempo real. Ao final, receba um resumo estruturado e a lista de tarefas. Em audiências, localiza trechos cruciais de depoimentos.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq">
+    <div class="section-head">
+      <div class="index reveal"><span class="num">02</span>FAQ</div>
+      <div class="reveal d1">
+        <h2>Dúvidas <span class="em">frequentes.</span></h2>
+        <p class="lede">Tudo o que você precisa saber antes de começar o seu teste.</p>
+      </div>
+    </div>
+    <div class="faq-items">
+
+      <div class="faq-item reveal">
+        <div class="faq-head" onclick="toggleFAQ(this)">
+          <span>O que diferencia o Juris8 do ChatGPT para a pesquisa de jurisprudências?</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-body">
+          <div class="faq-body-inner">
+            <p>O Juris8 foi desenvolvido especificamente para o direito brasileiro, com acesso a bases de jurisprudência reais (STJ, STF, TRTs, TJs) e capacidade de identificar precedentes com contexto relevante para o seu caso. O ChatGPT é um modelo genérico sem acesso a tribunais atualizados.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal d1">
+        <div class="faq-head" onclick="toggleFAQ(this)">
+          <span>Como se evita que os documentos gerados sejam genéricos e distantes da forma em que escrevo?</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-body">
+          <div class="faq-body-inner">
+            <p>O Juris8 aprende com as peças que você já escreveu — estilo, vocabulário, formatação e preferências argumentativas. Você pode carregar peças antigas para acelerar esse aprendizado. Quanto mais você usa, mais preciso ele fica em reproduzir o seu jeito de escrever.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal d2">
+        <div class="faq-head" onclick="toggleFAQ(this)">
+          <span>Quais tipos de documentos posso analisar com o Juris8?</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-body">
+          <div class="faq-body-inner">
+            <p>Contratos, decisões judiciais, registros imobiliários, laudos periciais, procurações e qualquer documento em PDF ou Word. O Juris8 identifica pontos críticos, cruza dados e extrai o que é relevante, mantendo cada detalhe sob o seu controle.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-head" onclick="toggleFAQ(this)">
+          <span>Como funciona a transcrição de audiências?</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-body">
+          <div class="faq-body-inner">
+            <p>Você abre o Juris8 no celular ou computador durante a audiência. Ele transcreve em tempo real, mapeia o que foi discutido e, ao final, entrega um resumo estruturado, lista de tarefas e os trechos mais relevantes dos depoimentos e esclarecimentos periciais.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal d1">
+        <div class="faq-head" onclick="toggleFAQ(this)">
+          <span>O Juris8 substitui o advogado?</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-body">
+          <div class="faq-body-inner">
+            <p>Não. O Juris8 automatiza as tarefas operacionais e repetitivas para que você se concentre no que realmente importa: estratégia, relacionamento com o cliente e tomada de decisão. A autoria e a responsabilidade continuam sendo suas — o Juris8 dá os toques iniciais, você dá os finais.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal d2">
+        <div class="faq-head" onclick="toggleFAQ(this)">
+          <span>As minhas informações poderão ser utilizadas pelo Juris8?</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-body">
+          <div class="faq-body-inner">
+            <p>Seus documentos e dados não são usados para treinar modelos de IA de terceiros. Tudo fica no seu ambiente, com criptografia em trânsito e em repouso. Seus dados são seus, sempre.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== CTA FINAL ===== -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <span class="eyebrow reveal">Pronto para começar?</span>
+      <h2 class="cta-h2 reveal d1">Pronto para <em>acelerar</em> sua prática jurídica?</h2>
+      <p class="cta-sub reveal d2">Descubra na prática como o Juris8 pode automatizar tarefas repetitivas e otimizar seu tempo, para que você se concentre no que realmente importa.</p>
+      <div class="btn-group reveal d3" style="justify-content:center;gap:16px;">
+        <a href="#" class="btn primary lg">Quero Testar</a>
+        <a href="#" class="btn secondary lg">Fale com um Especialista</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-col">
+        <div class="footer-brand">Juris8</div>
+        <p style="color:var(--ink-300);font-size:13px;max-width:26ch;line-height:1.55">A mais completa IA jurídica do Brasil. Desenvolvida por advogados, para advogados.</p>
+        <div style="margin-top:12px;display:flex;gap:10px;">
+          <a href="#" class="btn ghost sm">Instagram</a>
+          <a href="#" class="btn ghost sm">WhatsApp</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="lbl">Produto</div>
+        <a href="#">Pré-elaboração de peças</a>
+        <a href="#">Pesquisa de jurisprudência</a>
+        <a href="#">Análise de documentos</a>
+        <a href="#">Transcrição de audiências</a>
+      </div>
+      <div class="footer-col">
+        <div class="lbl">Empresa</div>
+        <a href="#">Sobre o Juris8</a>
+        <a href="#">Contato</a>
+        <a href="#">Conheça o Juris8 DJE</a>
+      </div>
+      <div class="footer-col">
+        <div class="lbl">Legal</div>
+        <a href="#">Privacidade</a>
+        <a href="#">Termos de uso</a>
+        <a href="#">LGPD</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <span>© 2025 Juris8. Todos os direitos reservados.</span>
+      <span class="mono">Desenvolvido por advogados, para advogados</span>
+    </div>
+  </footer>
+
+</div><!-- /shell -->
+
+<script>
+// FAQ
+function toggleFAQ(el) { el.closest('.faq-item').classList.toggle('open'); }
+
+// Scroll reveal
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// Parallax orbs (mouse + scroll)
+let mx = 0, my = 0, sy = 0;
+const orb1 = document.getElementById('orb1');
+const orb2 = document.getElementById('orb2');
+function updateOrbs() {
+  const px = (mx / window.innerWidth  - 0.5) * 40;
+  const py = (my / window.innerHeight - 0.5) * 28;
+  if (orb1) orb1.style.transform = `translate(${px*0.9}px,${py*0.9 + sy*0.06}px)`;
+  if (orb2) orb2.style.transform = `translate(${-px*0.6}px,${-py*0.6 - sy*0.04}px)`;
+}
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; requestAnimationFrame(updateOrbs); });
+
+// Parallax feature cards (scroll-driven)
+const featurePanels = document.querySelectorAll('[data-parallax]');
+function updateParallax() {
+  const vh = window.innerHeight;
+  featurePanels.forEach(wrap => {
+    const rect = wrap.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const offset = (vh / 2 - center) / vh; // -0.5..0.5
+    const y = offset * 60; // ±30px parallax range
+    wrap.style.transform = `translateY(${y}px)`;
+  });
+}
+
+window.addEventListener('scroll', () => {
+  sy = window.scrollY;
+  requestAnimationFrame(() => { updateOrbs(); updateParallax(); });
+  // Navbar
+  const nav = document.getElementById('navbar');
+  if (nav) nav.style.background = sy > 30 ? 'rgba(7,5,15,0.96)' : 'rgba(7,5,15,0.75)';
+}, { passive: true });
+
+// Init parallax on load
+updateParallax();
+
+/* ===== Animated hero chat (auto-loop, non-interactive) ===== */
+(function(){
+  const stream = document.getElementById('chatStream');
+  const fakeTyped = document.getElementById('fakeTyped');
+  if(!stream || !fakeTyped) return;
+
+  const scenarios = [
+    {
+      prompt: 'Elabore uma contestação trabalhista para reclamação de horas extras, com fundamentos nos arts. 58 e 59 da CLT.',
+      reply: 'Vou estruturar uma <span class="hl">Contestação Trabalhista</span> completa com preliminares, mérito e pedidos, fundamentada nos <span class="hl">arts. 58 e 59 da CLT</span>.',
+      tasks: [
+        ['Analisando fatos da reclamação', 'fatos'],
+        ['Consultando jurisprudência do TST', 'pesquisa'],
+        ['Estruturando preliminares e mérito', 'redação'],
+        ['Revisando citações e formatação', 'revisão'],
+      ],
+    },
+    {
+      prompt: 'Redija um recurso ordinário trabalhista contra sentença que julgou procedente o pedido de horas extras.',
+      reply: 'Preparando <span class="hl">Recurso Ordinário</span> ao TRT com tese de reforma, prequestionamento e precedentes recentes da turma julgadora.',
+      tasks: [
+        ['Lendo a sentença recorrida', 'análise'],
+        ['Identificando teses de reforma', 'estratégia'],
+        ['Buscando precedentes do TRT', 'pesquisa'],
+        ['Montando minuta do recurso', 'redação'],
+      ],
+    },
+    {
+      prompt: 'Crie um contrato de trabalho CLT com cláusulas de jornada, remuneração e confidencialidade.',
+      reply: 'Montando <span class="hl">Contrato de Trabalho CLT</span> com cláusulas de jornada, remuneração, benefícios e confidencialidade.',
+      tasks: [
+        ['Definindo partes e objeto', 'estrutura'],
+        ['Redigindo cláusulas obrigatórias', 'redação'],
+        ['Adicionando confidencialidade e LGPD', 'compliance'],
+        ['Revisão final do contrato', 'revisão'],
+      ],
+    },
+  ];
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  function addMsg(role, html){
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-msg ' + role;
+    wrap.innerHTML = '<div class="av">' + (role === 'user' ? 'EU' : 'j8') + '</div><div class="chat-bubble">' + html + '</div>';
+    stream.appendChild(wrap);
+    return wrap;
+  }
+
+  async function typeInto(el, text, speed){
+    el.textContent = '';
+    for(let i=0;i<text.length;i++){
+      el.textContent += text[i];
+      await sleep(speed);
+    }
+  }
+
+  async function runScenario(sc){
+    stream.innerHTML = '';
+    fakeTyped.textContent = '';
+    await typeInto(fakeTyped, sc.prompt, 18);
+    await sleep(450);
+
+    // user message
+    addMsg('user', sc.prompt);
+    fakeTyped.textContent = '';
+    await sleep(500);
+
+    // ai bubble with tasks
+    const ai = addMsg('ai', sc.reply + '<div class="task-list"></div>');
+    const list = ai.querySelector('.task-list');
+    const taskEls = sc.tasks.map(([label, tag]) => {
+      const t = document.createElement('div');
+      t.className = 'task';
+      t.innerHTML = '<span class="tk-ic"></span><span>'+label+'</span><span class="tk-tag">'+tag+'</span>';
+      list.appendChild(t);
+      return t;
+    });
+
+    for(let i=0;i<taskEls.length;i++){
+      await sleep(350);
+      taskEls[i].classList.add('show','run');
+      await sleep(900);
+      taskEls[i].classList.remove('run');
+      taskEls[i].classList.add('done');
+    }
+    await sleep(2200);
+  }
+
+  async function loop(){
+    let i = 0;
+    while(true){
+      await runScenario(scenarios[i % scenarios.length]);
+      i++;
+    }
+  }
+
+  // start when visible
+  const io = new IntersectionObserver((entries) => {
+    if(entries.some(e => e.isIntersecting)){
+      io.disconnect();
+      loop();
+    }
+  }, { threshold: 0.2 });
+  io.observe(stream);
+})();
+</script>
+</body>
+</html>
