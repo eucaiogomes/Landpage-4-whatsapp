@@ -150,13 +150,21 @@ section:last-of-type{border-bottom:none;}
   /* Navbar: hide links, keep logo + CTA */
   .nav-links{display:none;}
   .nav-enter{display:none;}
+  .nav-logo{height:28px;}
+  .nav-cta{font-size:12px;padding:7px 12px;white-space:nowrap;}
+  .navbar-inner{padding:0 16px;}
 
-  /* Hero: esconde dashboard (visual decorativo, sem valor em mobile) */
+  /* Hero */
   .db-wrap{display:none;}
   .hero-section{overflow:hidden;}
   .hero-inner{gap:32px;}
-  .nav-cta{font-size:12px;padding:7px 12px;white-space:nowrap;}
-  .navbar-inner{padding:0 16px;}
+
+  /* Botões do hero: mesma largura, empilhados */
+  .hero-ctas{flex-direction:column;align-items:stretch;gap:10px;}
+  .hero-btn-primary,.hero-btn-ghost{
+    width:100%;justify-content:center;
+    font-size:15px;padding:14px 20px;
+  }
 
   /* Hero */
   .hero-trust{gap:10px;}
