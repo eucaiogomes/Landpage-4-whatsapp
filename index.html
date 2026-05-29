@@ -535,9 +535,8 @@ p{margin:0;color:var(--ink-200);}
 .hero-video-wrap{
   display:flex;align-items:center;justify-content:center;
 }
-.hero-video-wrap video{
-  width:100%;max-width:480px;height:auto;
-  display:block;border-radius:16px;
+#julia-canvas{
+  width:100%;max-width:480px;height:auto;display:block;
 }
 
 /* ==============================
@@ -1305,9 +1304,10 @@ p{margin:0;color:var(--ink-200);}
         <p style="font-size:12px;color:var(--dim);margin:0;">Sem cartão de crédito. Cancele quando quiser.</p>
       </div>
 
-      <!-- ── DIREITA: vídeo direto ── -->
+      <!-- ── DIREITA: vídeo com chroma key #00b758 ── -->
       <div class="hero-video-wrap" style="animation:fadeUp 0.9s ease 0.2s both;">
-        <video src="/videos/julia-demo.mp4" autoplay loop muted playsinline></video>
+        <video id="julia-video" src="/videos/julia-demo.mp4" autoplay loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
+        <canvas id="julia-canvas"></canvas>
       </div>
 
     </div><!-- /hero-inner -->
@@ -1918,5 +1918,65 @@ function handleFormSubmit(e) {
 document.body.classList.add('page-ready');
 </script>
 
+<!-- Chroma key preciso: remove exatamente #00b758 -->
+<script>
+(function () {
+  const video  = document.getElementById('julia-video');
+  const canvas = document.getElementById('julia-canvas');
+  if (!video || !canvas) return;
+
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  let raf;
+
+  /* Cor alvo: #00b758 = rgb(0, 183, 88) */
+  const TR = 0, TG = 183, TB = 88;
+  const TOLERANCE = 55; /* distância máxima da cor alvo */
+  const FEATHER   = 30; /* zona de suavização de borda */
+
+  function processFrame() {
+    if (!video.videoWidth) { raf = requestAnimationFrame(processFrame); return; }
+
+    if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+      canvas.width  = video.videoWidth;
+      canvas.height = video.videoHeight;
+    }
+
+    ctx.drawImage(video, 0, 0);
+
+    const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const d = frame.data;
+
+    for (let i = 0; i < d.length; i += 4) {
+      const r = d[i], g = d[i+1], b = d[i+2];
+
+      /* Distância euclidiana até #00b758 */
+      const dist = Math.sqrt(
+        (r - TR) * (r - TR) +
+        (g - TG) * (g - TG) +
+        (b - TB) * (b - TB)
+      );
+
+      if (dist < TOLERANCE) {
+        d[i+3] = 0; /* totalmente transparente */
+      } else if (dist < TOLERANCE + FEATHER) {
+        /* suaviza a borda proporcionalmente */
+        d[i+3] = Math.round(255 * (dist - TOLERANCE) / FEATHER);
+      }
+    }
+
+    ctx.putImageData(frame, 0, 0);
+    raf = requestAnimationFrame(processFrame);
+  }
+
+  video.addEventListener('play', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(processFrame); });
+  video.addEventListener('pause', () => cancelAnimationFrame(raf));
+
+  if (video.readyState >= 1) {
+    video.play().catch(() => {});
+  } else {
+    video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
+  }
+})();
+</script>
 </body>
 </html>
