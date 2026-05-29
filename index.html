@@ -530,41 +530,14 @@ p{margin:0;color:var(--ink-200);}
 }
 
 /* ==============================
-   JÚLIA HERO — FRAME CELULAR
+   JÚLIA HERO — VÍDEO
 ============================== */
-.hero-phone-wrap{
+.hero-video-wrap{
   display:flex;align-items:center;justify-content:center;
-  padding:20px 0;
 }
-.hero-phone-frame{
-  position:relative;
-  width:min(320px, 90%);
-  background:var(--ink-950);
-  border-radius:44px;
-  border:2px solid rgba(124,58,237,0.55);
-  box-shadow:
-    0 0 0 6px rgba(124,58,237,0.08),
-    0 40px 100px -30px rgba(0,0,0,0.9),
-    0 0 60px -10px rgba(124,58,237,0.2),
-    inset 0 0 0 1px rgba(255,255,255,0.06);
-  overflow:hidden;
-  aspect-ratio:9/19.5;
-  display:flex;flex-direction:column;align-items:stretch;
-}
-.hero-phone-notch{
-  width:90px;height:26px;background:var(--ink-950);
-  border-radius:0 0 18px 18px;
-  position:absolute;top:0;left:50%;transform:translateX(-50%);
-  z-index:10;
-  box-shadow:0 1px 0 rgba(124,58,237,0.3);
-}
-.hero-phone-bar{
-  width:100px;height:4px;background:rgba(255,255,255,0.2);
-  border-radius:3px;margin:8px auto;flex-shrink:0;
-}
-#julia-video{ display:none; }
-#julia-canvas{
-  width:100%;flex:1;display:block;object-fit:cover;
+.hero-video-wrap video{
+  width:100%;max-width:480px;height:auto;
+  display:block;border-radius:16px;
 }
 
 /* ==============================
@@ -1332,17 +1305,9 @@ p{margin:0;color:var(--ink-200);}
         <p style="font-size:12px;color:var(--dim);margin:0;">Sem cartão de crédito. Cancele quando quiser.</p>
       </div>
 
-      <!-- ── DIREITA: celular chroma key ── -->
-      <div class="hero-phone-wrap" style="animation:fadeUp 0.9s ease 0.2s both;">
-        <div class="hero-phone-frame">
-          <!-- notch -->
-          <div class="hero-phone-notch"></div>
-          <!-- vídeo direto no frame -->
-          <video id="julia-video" src="/videos/julia-demo.mp4" autoplay loop muted playsinline style="width:100%;flex:1;display:block;object-fit:cover;"></video>
-          <canvas id="julia-canvas" style="display:none;"></canvas>
-          <!-- home bar -->
-          <div class="hero-phone-bar"></div>
-        </div>
+      <!-- ── DIREITA: vídeo direto ── -->
+      <div class="hero-video-wrap" style="animation:fadeUp 0.9s ease 0.2s both;">
+        <video src="/videos/julia-demo.mp4" autoplay loop muted playsinline></video>
       </div>
 
     </div><!-- /hero-inner -->
@@ -1953,70 +1918,5 @@ function handleFormSubmit(e) {
 document.body.classList.add('page-ready');
 </script>
 
-<!-- ── Chroma Key: remove fundo verde da Júlia ── -->
-<script>
-(function () {
-  const video  = document.getElementById('julia-video');
-  const canvas = document.getElementById('julia-canvas');
-  if (!video || !canvas) return;
-
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  let raf;
-
-  function processFrame() {
-    if (video.paused || video.ended || !video.videoWidth) {
-      raf = requestAnimationFrame(processFrame);
-      return;
-    }
-
-    const W = video.videoWidth;
-    const H = video.videoHeight;
-
-    if (canvas.width !== W || canvas.height !== H) {
-      canvas.width  = W;
-      canvas.height = H;
-    }
-
-    ctx.drawImage(video, 0, 0, W, H);
-
-    const frame = ctx.getImageData(0, 0, W, H);
-    const d = frame.data;
-
-    for (let i = 0; i < d.length; i += 4) {
-      const r = d[i];
-      const g = d[i + 1];
-      const b = d[i + 2];
-
-      /* Remove pixels onde verde é dominante (chroma key) */
-      const isGreen = g > 80 && g > r * 1.25 && g > b * 1.25;
-
-      if (isGreen) {
-        /* Suaviza bordas: quanto mais "verde", mais transparente */
-        const ratio = Math.min(1, (g - Math.max(r, b)) / 80);
-        d[i + 3] = Math.round(d[i + 3] * (1 - ratio));
-      }
-    }
-
-    ctx.putImageData(frame, 0, 0);
-    raf = requestAnimationFrame(processFrame);
-  }
-
-  function startChroma() {
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(processFrame);
-  }
-
-  video.addEventListener('play',  startChroma);
-  video.addEventListener('pause', () => cancelAnimationFrame(raf));
-  video.addEventListener('ended', () => cancelAnimationFrame(raf));
-
-  /* Inicia assim que o metadata (dimensões) estiver disponível */
-  if (video.readyState >= 1) {
-    video.play().catch(() => {});
-  } else {
-    video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
-  }
-})();
-</script>
 </body>
 </html>
