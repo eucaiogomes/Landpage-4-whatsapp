@@ -322,13 +322,19 @@ p{margin:0;color:var(--ink-200);}
 .hero-section .shell{position:relative;z-index:1;}
 .hero-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:40px;align-items:center;}
 @media(max-width:860px){.hero-inner{grid-template-columns:1fr;}}
-.hero-content{display:flex;flex-direction:column;gap:24px;}
+.hero-content{display:flex;flex-direction:column;gap:0;}
+/* Zona 1: identidade — chip + headline + sub */
+.hero-zone-identity{display:flex;flex-direction:column;gap:16px;}
+/* Zona 2: ação — callout + CTAs */
+.hero-zone-action{display:flex;flex-direction:column;gap:16px;margin-top:32px;}
+/* Zona 3: prova social */
+.hero-zone-proof{display:flex;flex-direction:column;gap:14px;margin-top:36px;padding-top:28px;border-top:1px solid var(--hairline);}
 
 /* Headline Júlia highlight */
 .hero-h1-julia{
-  background:linear-gradient(130deg,#C4A0FF 0%,#8B5CF6 50%,#B788FF 100%);
+  background:linear-gradient(125deg,#DFC4FF 0%,#9B59F5 45%,#C084FC 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  font-style:italic;font-family:var(--font-display);
+  font-style:italic;font-family:var(--font-sans);font-weight:800;
 }
 
 /* Callout box */
@@ -357,8 +363,8 @@ p{margin:0;color:var(--ink-200);}
 .hero-avatars{display:flex;}
 .hero-avatar{width:34px;height:34px;border-radius:50%;border:2px solid var(--surface-1);object-fit:cover;margin-left:-8px;}
 .hero-avatars .hero-avatar:first-child{margin-left:0;}
-.hero-social-text{display:flex;flex-direction:column;gap:4px;}
-.hero-social-label{margin:0;font-size:12px;color:var(--muted);}
+.hero-social-text{display:flex;flex-direction:column;gap:3px;}
+.hero-social-label{margin:0;font-size:11.5px;color:var(--dim);}
 .hero-stars{display:flex;align-items:center;gap:6px;font-size:12px;}
 .hero-stars-icons{color:#FBBF24;letter-spacing:-1px;font-size:13px;}
 .hero-stars-score{color:var(--ink-100);font-weight:600;}
@@ -521,7 +527,8 @@ p{margin:0;color:var(--ink-200);}
 }
 
 /* Subtitle */
-.hero-sub-strong{font-size:16px;color:var(--ink-100);line-height:1.65;font-weight:400;}
+.hero-sub-strong{font-size:16px;color:var(--ink-100);line-height:1.7;font-weight:400;}
+.hero-sub-aside{color:var(--muted);font-size:15px;}
 .hero-sub-light{font-size:14.5px;color:var(--ink-400);line-height:1.7;}
 
 /* CTAs */
@@ -1476,64 +1483,57 @@ p{margin:0;color:var(--ink-200);}
       <!-- ── COL 1: copy ── -->
       <div class="hero-content" style="animation:fadeUp 0.65s ease both;">
 
-        <div class="hero-chips">
-          <span class="hero-chip-green"><span class="hc-dot"></span>Secretária IA para advogados</span>
+        <!-- ZONA 1: identidade -->
+        <div class="hero-zone-identity">
+          <div class="hero-chips">
+            <span class="hero-chip-green"><span class="hc-dot"></span>Secretária IA para advogados</span>
+          </div>
+          <h1 class="hero-h1">
+            Enquanto você advoga,<br>
+            <span class="hero-h1-julia">a Júlia</span> cuida dos clientes.
+          </h1>
+          <p class="hero-sub-strong">A secretária jurídica de IA que responde, agenda, lembra, cobra e acompanha clientes automaticamente pelo WhatsApp. <span class="hero-sub-aside">Você só aparece quando o cliente precisa de um advogado de verdade.</span></p>
         </div>
 
-        <h1 class="hero-h1">
-          Enquanto você advoga,<br>
-          <span class="hero-h1-julia">a Júlia</span> cuida dos clientes.
-        </h1>
-
-        <p class="hero-sub-strong">A secretária jurídica de IA que responde, agenda, lembra, cobra e acompanha clientes automaticamente pelo WhatsApp.</p>
-
-        <div class="hero-callout">
-          <span class="hero-callout-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </span>
-          <p>Você só aparece quando o cliente quer falar com <span class="hero-callout-em">advogado de verdade.</span></p>
-        </div>
-
-        <div class="hero-ctas">
-          <a href="#trial" class="hero-btn-primary">Conhecer a Júlia — 7 dias grátis →</a>
-          <a href="#contato" class="hero-btn-ghost">Falar com vendas</a>
-        </div>
-
-        <!-- trust signals -->
-        <div class="hero-trust-row">
-          <div class="hero-trust-item">
-            <svg class="hero-trust-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Responde 24h por dia
+        <!-- ZONA 2: ação -->
+        <div class="hero-zone-action">
+          <div class="hero-ctas">
+            <a href="#trial" class="hero-btn-primary">Conhecer a Júlia — 7 dias grátis →</a>
+            <a href="#contato" class="hero-btn-ghost">Falar com vendas</a>
           </div>
-          <div class="hero-trust-item">
-            <svg class="hero-trust-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Integra com WhatsApp
-          </div>
-          <div class="hero-trust-item">
-            <svg class="hero-trust-icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            Mantém o tom do escritório
-          </div>
-          <div class="hero-trust-item">
-            <svg class="hero-trust-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Config. em menos de 5 min
+          <div class="hero-trust-row">
+            <div class="hero-trust-item">
+              <svg class="hero-trust-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Responde 24h por dia
+            </div>
+            <div class="hero-trust-item">
+              <svg class="hero-trust-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Integra com WhatsApp
+            </div>
+            <div class="hero-trust-item">
+              <svg class="hero-trust-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Ativa em menos de 5 min
+            </div>
           </div>
         </div>
 
-        <!-- social proof -->
-        <div class="hero-social-proof">
-          <div class="hero-avatars">
-            <img src="https://i.pravatar.cc/40?img=47" alt="" class="hero-avatar">
-            <img src="https://i.pravatar.cc/40?img=12" alt="" class="hero-avatar">
-            <img src="https://i.pravatar.cc/40?img=32" alt="" class="hero-avatar">
-            <img src="https://i.pravatar.cc/40?img=55" alt="" class="hero-avatar">
-          </div>
-          <div class="hero-social-text">
-            <p class="hero-social-label">Advogados em todo o Brasil já confiam na Júlia</p>
-            <div class="hero-stars">
-              <span class="hero-stars-icons">★★★★★</span>
-              <span class="hero-stars-score">4,9 de 5</span>
-              <span class="hero-stars-sep">·</span>
-              <span class="hero-stars-count">+200 escritórios atendidos</span>
+        <!-- ZONA 3: prova social -->
+        <div class="hero-zone-proof">
+          <div class="hero-social-proof">
+            <div class="hero-avatars">
+              <img src="https://i.pravatar.cc/40?img=47" alt="" class="hero-avatar">
+              <img src="https://i.pravatar.cc/40?img=12" alt="" class="hero-avatar">
+              <img src="https://i.pravatar.cc/40?img=32" alt="" class="hero-avatar">
+              <img src="https://i.pravatar.cc/40?img=55" alt="" class="hero-avatar">
+            </div>
+            <div class="hero-social-text">
+              <div class="hero-stars">
+                <span class="hero-stars-icons">★★★★★</span>
+                <span class="hero-stars-score">4,9 de 5</span>
+                <span class="hero-stars-sep">·</span>
+                <span class="hero-stars-count">+200 escritórios atendidos</span>
+              </div>
+              <p class="hero-social-label">Advogados em todo o Brasil já confiam na Júlia</p>
             </div>
           </div>
         </div>
