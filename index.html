@@ -320,8 +320,7 @@ p{margin:0;color:var(--ink-200);}
     radial-gradient(ellipse 350px 300px at 10% 80%, rgba(76,26,158,0.1) 0%, transparent 65%);
 }
 .hero-section .shell{position:relative;z-index:1;}
-.hero-inner{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,0.6fr) minmax(0,0.75fr);gap:40px;align-items:start;}
-@media(max-width:1100px){.hero-inner{grid-template-columns:minmax(0,1.2fr) minmax(0,0.55fr) minmax(0,0.7fr);gap:28px;}}
+.hero-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:40px;align-items:center;}
 @media(max-width:860px){.hero-inner{grid-template-columns:1fr;}}
 .hero-content{display:flex;flex-direction:column;gap:24px;}
 
@@ -366,36 +365,87 @@ p{margin:0;color:var(--ink-200);}
 .hero-stars-sep{color:var(--dim);}
 .hero-stars-count{color:var(--juris-300);font-weight:500;}
 
-/* Feature cards column */
-.hero-cards-col{
-  position:relative;display:flex;flex-direction:column;gap:14px;
-  padding:4px 0;justify-content:center;padding-top:clamp(10px,3vw,40px);
+/* ── ORBIT LAYOUT ── */
+.hero-orbit{
+  display:flex;align-items:center;gap:10px;
+  position:relative;
 }
-.hero-cards-line{
-  position:absolute;left:21px;top:36px;bottom:36px;width:1px;
-  background:linear-gradient(to bottom,transparent,rgba(124,58,237,0.35) 20%,rgba(124,58,237,0.35) 80%,transparent);
-  z-index:0;
+.hero-orbit-side{
+  display:flex;flex-direction:column;gap:0;flex-shrink:0;width:158px;
 }
+.hero-orbit-left{align-items:flex-end;}
+.hero-orbit-right{align-items:flex-start;}
+.hero-orbit-center{
+  flex:1;min-width:0;position:relative;display:flex;align-items:center;justify-content:center;
+}
+.hero-orbit-center::before{
+  content:'';position:absolute;inset:-30px;
+  background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(124,58,237,0.2) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+#julia-canvas{width:100%;max-width:340px;height:auto;display:block;position:relative;z-index:1;}
+
+/* Individual orbit cards */
 .hero-feat-card{
-  display:flex;align-items:center;gap:12px;
-  background:var(--surface-1);border:1px solid var(--hairline-strong);
-  border-radius:12px;padding:12px 14px;
-  box-shadow:0 4px 20px -8px rgba(0,0,0,0.5);
-  position:relative;z-index:1;
-  transition:transform 0.2s ease,box-shadow 0.2s ease;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(18,12,36,0.82);
+  border:1px solid rgba(124,58,237,0.22);
+  border-radius:12px;padding:11px 13px;
+  box-shadow:0 8px 32px -12px rgba(0,0,0,0.7),0 0 0 1px rgba(124,58,237,0.06);
+  backdrop-filter:blur(12px);
+  position:relative;width:158px;
+  transition:transform 0.25s ease,box-shadow 0.25s ease;
+  animation:floatCard 4s ease-in-out infinite;
 }
-.hero-feat-card:hover{transform:translateX(3px);box-shadow:0 8px 28px -8px rgba(124,58,237,0.2);}
+.hero-feat-card:hover{box-shadow:0 12px 36px -8px rgba(124,58,237,0.28);border-color:rgba(124,58,237,0.4);}
+
+/* stagger float animations per card */
+.hfc-1{animation-delay:0s;}
+.hfc-2{animation-delay:1s;}
+.hfc-3{animation-delay:0.5s;}
+.hfc-4{animation-delay:1.5s;}
+/* vertical offset to create orbit feel */
+.hfc-1{margin-bottom:28px;}
+.hfc-2{margin-top:0;}
+.hfc-3{margin-bottom:0;margin-top:28px;}
+.hfc-4{margin-top:0;}
+
+@keyframes floatCard{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+
+/* connector lines from cards to center */
+.hero-orbit-left .hero-feat-card::after{
+  content:'';position:absolute;right:-10px;top:50%;
+  width:10px;height:1px;
+  background:linear-gradient(to right,rgba(124,58,237,0.5),transparent);
+  pointer-events:none;
+}
+.hero-orbit-right .hero-feat-card::before{
+  content:'';position:absolute;left:-10px;top:50%;
+  width:10px;height:1px;
+  background:linear-gradient(to left,rgba(124,58,237,0.5),transparent);
+  pointer-events:none;
+}
+
 .hero-feat-icon{
-  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
 }
-.hero-feat-icon svg{width:18px;height:18px;}
+.hero-feat-icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .hfi-teal{background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);color:#2DD4BF;}
 .hfi-purple{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);color:#A78BFA;}
 .hfi-green{background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.22);color:#4ADE80;}
 .hfi-blue{background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.22);color:#60A5FA;}
-.hero-feat-title{margin:0;font-size:12.5px;font-weight:600;color:var(--text);line-height:1.3;}
-.hero-feat-desc{margin:0;font-size:11.5px;color:var(--muted);line-height:1.4;margin-top:2px;}
+.hero-feat-title{margin:0;font-size:12px;font-weight:600;color:var(--text);line-height:1.3;}
+.hero-feat-desc{margin:0;font-size:10.5px;color:var(--muted);line-height:1.4;margin-top:2px;}
+
+@media(max-width:860px){
+  .hero-orbit-side{display:none;}
+}
+/* keep old alias for video wrap */
+.hero-video-wrap{display:contents;}
 
 /* Stats bar */
 .hero-stats-bar{
@@ -1473,56 +1523,60 @@ p{margin:0;color:var(--ink-200);}
 
       </div><!-- /hero-content -->
 
-      <!-- ── COL 2: feature cards flutuantes ── -->
-      <div class="hero-cards-col" style="animation:fadeUp 0.75s ease 0.15s both;">
-        <div class="hero-cards-line"></div>
+      <!-- ── COL 2: orbit (cards + phone) ── -->
+      <div class="hero-orbit" style="animation:fadeUp 0.8s ease 0.18s both;">
 
-        <div class="hero-feat-card">
-          <div class="hero-feat-icon hfi-teal">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <!-- left cards -->
+        <div class="hero-orbit-side hero-orbit-left">
+          <div class="hero-feat-card hfc-1">
+            <div class="hero-feat-icon hfi-teal">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+              <p class="hero-feat-title">Consulta agendada</p>
+              <p class="hero-feat-desc">Cliente confirmou para 15/07 às 14h.</p>
+            </div>
           </div>
-          <div>
-            <p class="hero-feat-title">Consulta agendada</p>
-            <p class="hero-feat-desc">Cliente confirmou para 15/07 às 14h.</p>
+          <div class="hero-feat-card hfc-2">
+            <div class="hero-feat-icon hfi-purple">
+              <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <div>
+              <p class="hero-feat-title">Audiência lembrada</p>
+              <p class="hero-feat-desc">Lembrete enviado com sucesso.</p>
+            </div>
           </div>
         </div>
 
-        <div class="hero-feat-card">
-          <div class="hero-feat-icon hfi-purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <!-- center: phone -->
+        <div class="hero-orbit-center">
+          <video id="julia-video" src="/videos/julia-demo.mp4" autoplay loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
+          <canvas id="julia-canvas"></canvas>
+        </div>
+
+        <!-- right cards -->
+        <div class="hero-orbit-side hero-orbit-right">
+          <div class="hero-feat-card hfc-3">
+            <div class="hero-feat-icon hfi-green">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5a2.5 2.5 0 0 0-5 0c0 1.4.9 2.1 2.5 2.5s2.5 1.1 2.5 2.5a2.5 2.5 0 0 1-5 0"/></svg>
+            </div>
+            <div>
+              <p class="hero-feat-title">Honorário cobrado</p>
+              <p class="hero-feat-desc">Pagamento confirmado.</p>
+            </div>
           </div>
-          <div>
-            <p class="hero-feat-title">Audiência lembrada</p>
-            <p class="hero-feat-desc">Lembrete enviado para o cliente com sucesso.</p>
+          <div class="hero-feat-card hfc-4">
+            <div class="hero-feat-icon hfi-blue">
+              <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <div>
+              <p class="hero-feat-title">Cliente atualizado</p>
+              <p class="hero-feat-desc">Processo enviado ao cliente.</p>
+            </div>
           </div>
         </div>
 
-        <div class="hero-feat-card">
-          <div class="hero-feat-icon hfi-green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5a2.5 2.5 0 0 0-5 0c0 1.4.9 2.1 2.5 2.5s2.5 1.1 2.5 2.5a2.5 2.5 0 0 1-5 0"/></svg>
-          </div>
-          <div>
-            <p class="hero-feat-title">Honorário cobrado</p>
-            <p class="hero-feat-desc">Cobrança enviada e pagamento confirmado.</p>
-          </div>
-        </div>
-
-        <div class="hero-feat-card">
-          <div class="hero-feat-icon hfi-blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          </div>
-          <div>
-            <p class="hero-feat-title">Cliente atualizado</p>
-            <p class="hero-feat-desc">Informações do processo enviadas ao cliente.</p>
-          </div>
-        </div>
-      </div><!-- /hero-cards-col -->
-
-      <!-- ── COL 3: mockup ── -->
-      <div class="hero-video-wrap" style="animation:fadeUp 0.9s ease 0.25s both;">
-        <video id="julia-video" src="/videos/julia-demo.mp4" autoplay loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
-        <canvas id="julia-canvas"></canvas>
-      </div>
+      </div><!-- /hero-orbit -->
 
     </div><!-- /hero-inner -->
 
