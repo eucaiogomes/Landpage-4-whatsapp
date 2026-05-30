@@ -1449,6 +1449,50 @@ p{margin:0;color:var(--ink-200);}
   .form-row{grid-template-columns:1fr;}
   .btn-group{flex-direction:column;align-items:flex-start;}
 }
+
+/* ==============================
+   TRUST TICKER
+============================== */
+@keyframes ticker{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+.ticker-wrap{
+  width:100%;overflow:hidden;
+  background:rgba(255,255,255,0.03);
+  border-top:1px solid rgba(255,255,255,0.07);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  padding:13px 0;
+  position:relative;
+  /* fade nas bordas */
+  mask-image:linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%);
+}
+.ticker-track{
+  display:inline-flex;align-items:center;gap:0;
+  white-space:nowrap;
+  animation:ticker 50s linear infinite;
+  will-change:transform;
+}
+.ticker-wrap:hover .ticker-track{animation-play-state:paused;}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:500;letter-spacing:0.01em;
+  color:var(--muted);padding:0 20px;
+  transition:color 0.2s;
+}
+.ticker-item:hover{color:var(--ink-100);}
+.ticker-sep{color:var(--dim);font-size:10px;flex-shrink:0;}
+.ticker-icon{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.ticker-icon svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ti-green{background:rgba(74,222,128,0.12);color:#4ADE80;}
+.ti-purple{background:rgba(139,92,246,0.14);color:#A78BFA;}
+.ti-yellow{background:rgba(251,191,36,0.12);color:#FBBF24;}
+.ti-teal{background:rgba(45,212,191,0.12);color:#2DD4BF;}
+.ti-blue{background:rgba(96,165,250,0.12);color:#60A5FA;}
 </style>
 </head>
 <body>
@@ -1647,6 +1691,61 @@ p{margin:0;color:var(--ink-200);}
   </div><!-- /shell -->
 </section>
 
+<!-- ==============================
+     TRUST TICKER
+============================== -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <!-- set A -->
+    <span class="ticker-item"><span class="ticker-icon ti-green"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>Sem cartão de crédito</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-purple"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>90% das mensagens respondidas pela IA</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-yellow"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>4,9 de 5 — +200 escritórios atendidos</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-teal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Atende clientes 24h por dia, 7 dias por semana</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-green"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>3x mais recuperação de honorários em atraso</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-purple"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>Integra com WhatsApp em menos de 5 minutos</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-blue"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Conforme LGPD — dados criptografados</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-teal"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>70% menos tempo com tarefas operacionais</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-yellow"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5a2.5 2.5 0 0 0-5 0c0 1.4.9 2.1 2.5 2.5s2.5 1.1 2.5 2.5a2.5 2.5 0 0 1-5 0"/></svg></span>Cobra honorários automaticamente no prazo certo</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-green"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Mantém o tom e a voz do seu escritório</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-purple"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>Respostas personalizadas por área do direito</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-blue"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Lembrete automático de audiência para clientes</span>
+    <!-- set B — clone para loop contínuo -->
+    <span class="ticker-item"><span class="ticker-icon ti-green"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>Sem cartão de crédito</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-purple"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>90% das mensagens respondidas pela IA</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-yellow"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>4,9 de 5 — +200 escritórios atendidos</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-teal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Atende clientes 24h por dia, 7 dias por semana</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-green"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>3x mais recuperação de honorários em atraso</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-purple"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>Integra com WhatsApp em menos de 5 minutos</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-blue"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Conforme LGPD — dados criptografados</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-teal"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>70% menos tempo com tarefas operacionais</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-yellow"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5a2.5 2.5 0 0 0-5 0c0 1.4.9 2.1 2.5 2.5s2.5 1.1 2.5 2.5a2.5 2.5 0 0 1-5 0"/></svg></span>Cobra honorários automaticamente no prazo certo</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-green"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Mantém o tom e a voz do seu escritório</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-purple"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>Respostas personalizadas por área do direito</span>
+    <span class="ticker-sep">·</span>
+    <span class="ticker-item"><span class="ticker-icon ti-blue"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Lembrete automático de audiência para clientes</span>
+  </div>
+</div>
 
 <!-- ==============================
      S2 · O QUE A JÚLIA RESOLVE
